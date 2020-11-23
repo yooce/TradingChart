@@ -28,6 +28,7 @@ namespace MagicalNuts
 		private double PreviousX = double.NaN;
 		private List<Plotters.IPlotter> Plotters = null;
 		private HorizontalLineAnnotation MovingSplitter = null;
+		private bool IsScrolling = false;
 
 		// 銘柄依存
 		private List<DataTypes.Candle> DailyCandles = null;
@@ -50,6 +51,7 @@ namespace MagicalNuts
 			MouseDown += new MouseEventHandler(chart_MouseDown);
 			MouseUp += new MouseEventHandler(chart_MouseUp);
 			AnnotationPositionChanging += new EventHandler<AnnotationPositionChangingEventArgs>(chart_AnnotationPositionChanging);
+			AxisScrollBarClicked += new EventHandler<ScrollBarEventArgs>(chart_AxisScrollBarClicked);
 
 			// MainChartArea
 			MainChartArea = new MainChartArea();
@@ -175,16 +177,15 @@ namespace MagicalNuts
 
 		private void UpdateChartSettings()
 		{
-			if (MainChartArea.AxisX.ScaleView.Position == double.NaN) return;
+			if (double.IsNaN(MainChartArea.AxisX.ScaleView.Position)) return;
 
-			// ロウソク足の開始と終了取得
+			// 開始位置決定
 			int candle_start = (int)MainChartArea.AxisX.ScaleView.Position;
-			int candle_end = candle_start + (int)MainChartArea.AxisX.ScaleView.Size;
-
-			// 範囲補整
 			if (candle_start < 0) candle_start = 0;
 			else if (candle_start > Candles.Count - MainChartArea.AxisX.ScaleView.Size) candle_start = Candles.Count - (int)MainChartArea.AxisX.ScaleView.Size;
-			if (candle_end >= Candles.Count) candle_end = Candles.Count;
+
+			// 終了位置決定
+			int candle_end = candle_start + (int)MainChartArea.AxisX.ScaleView.Size;
 
 			// 最高値、最安値を取得
 			List<decimal> highs = new List<decimal>();
@@ -219,6 +220,8 @@ namespace MagicalNuts
 		{
 			if (MovingSplitter != null)
 			{
+				// 分割線の操作
+
 				// 配置
 				for (int i = 0; i < SubChartAreas.Count; i++)
 				{
@@ -247,10 +250,14 @@ namespace MagicalNuts
 				// 再描画
 				Update();
 			}
+			else if (IsScrolling)
+			{
+				// スクロールバーの操作
+
+				UpdateChartSettings();
+			}
 			else
 			{
-				// 分割線の操作でない
-
 				// ロウソク足が無かったら何もしない
 				if (Candles == null) return;
 
@@ -289,9 +296,15 @@ namespace MagicalNuts
 			PreviousX = MainChartArea.AxisX.PixelPositionToValue(e.Location.X);
 		}
 
+		private void chart_AxisScrollBarClicked(object sender, ScrollBarEventArgs e)
+		{
+			IsScrolling = true;
+		}
+
 		private void chart_MouseUp(object sender, MouseEventArgs e)
 		{
 			MovingSplitter = null;
+			IsScrolling = false;
 			UpdateChartSettings();
 		}
 
