@@ -27,7 +27,7 @@ namespace MagicalNuts
 			set
 			{
 				MainChartArea.AxisX.ScaleView.Size = value;
-				UpdateChartSettings();
+				UpdateYSettings();
 			}
 		}
 
@@ -139,7 +139,7 @@ namespace MagicalNuts
 			// 初期位置
 			MainChartArea.AxisX.ScaleView.Position = Candles.Count - MainChartArea.AxisX.ScaleView.Size;
 
-			UpdateChartSettings();
+			UpdateYSettings();
 		}
 
 		private bool IsNeedCustomLabel(DataTypes.Candle candle, DateTime? prevDateTime)
@@ -184,45 +184,23 @@ namespace MagicalNuts
 			return "";
 		}
 
-		private void UpdateChartSettings()
+		private void UpdateYSettings()
 		{
 			if (double.IsNaN(MainChartArea.AxisX.ScaleView.Position)) return;
 
 			// 開始位置決定
-			int candle_start = (int)MainChartArea.AxisX.ScaleView.Position;
-			if (candle_start < 0) candle_start = 0;
-			else if (candle_start > Candles.Count - MainChartArea.AxisX.ScaleView.Size) candle_start = Candles.Count - (int)MainChartArea.AxisX.ScaleView.Size;
+			int start = (int)MainChartArea.AxisX.ScaleView.Position;
+			if (start < 0) start = 0;
+			else if (start > Candles.Count - MainChartArea.AxisX.ScaleView.Size) start = Candles.Count - (int)MainChartArea.AxisX.ScaleView.Size;
 
 			// 終了位置決定
-			int candle_end = candle_start + (int)MainChartArea.AxisX.ScaleView.Size;
+			int end = start + (int)MainChartArea.AxisX.ScaleView.Size;
 
-			// 最高値、最安値を取得
-			List<decimal> highs = new List<decimal>();
-			List<decimal> lows = new List<decimal>();
-			for (int i = candle_start; i < candle_end; i++)
+			MainChartArea.UpdateYSettings(start, end, Plotters);
+			foreach (SubChartArea subChartArea in SubChartAreas)
 			{
-				highs.Add(Candles[i].High);
-				lows.Add(Candles[i].Low);
+				subChartArea.UpdateYSettings(start, end, Plotters);
 			}
-			double max = (double)highs.Max();
-			double min = (double)lows.Min();
-
-			// 範囲決定
-			MainChartArea.AxisY2.ScaleView.Size = (max - min) * (12.0 / 8.0);
-
-			// 位置決定
-			MainChartArea.AxisY2.ScaleView.Position = min - (MainChartArea.AxisY2.ScaleView.Size / 4.0);
-
-			// 出来高
-			List<long> volumes = new List<long>();
-			for (int i = candle_start; i < candle_end; i++)
-			{
-				volumes.Add(Candles[i].Volume);
-			}
-
-			long max2 = volumes.Max();
-			long top2 = max2 * 4;
-			MainChartArea.AxisY.ScaleView.Size = top2;
 		}
 
 		private void chart_MouseMove(object sender, MouseEventArgs e)
@@ -263,7 +241,7 @@ namespace MagicalNuts
 			{
 				// スクロールバーの操作
 
-				UpdateChartSettings();
+				UpdateYSettings();
 			}
 			else
 			{
@@ -295,7 +273,7 @@ namespace MagicalNuts
 				if (e.Button.HasFlag(MouseButtons.Left))
 				{
 					MainChartArea.AxisX.ScaleView.Position -= (MainChartArea.AxisX.PixelPositionToValue(mouse.X) - PreviousX);
-					UpdateChartSettings();
+					UpdateYSettings();
 				}
 			}
 		}
@@ -314,13 +292,13 @@ namespace MagicalNuts
 		{
 			MovingSplitter = null;
 			IsScrolling = false;
-			UpdateChartSettings();
+			UpdateYSettings();
 		}
 
 		private void chart_MouseWheel(object sender, MouseEventArgs e)
 		{
 			MainChartArea.AxisX.ScaleView.Position += e.Delta / 120 * 60;
-			UpdateChartSettings();
+			UpdateYSettings();
 		}
 
 		private void chart_AnnotationPositionChanging(object sender, AnnotationPositionChangingEventArgs e)

@@ -1,5 +1,4 @@
-﻿using MagicalNuts.Plotters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -83,6 +82,36 @@ namespace MagicalNuts
 				// カーソルラベルY
 				CursorLabelY.Visible = false;
 			}
+		}
+
+		public abstract void UpdateYSettings(int start, int end, List<Plotters.IPlotter> plotters);
+
+		protected List<double> GetValues(int start, int end, List<Plotters.IPlotter> plotters, AxisType at)
+		{
+			List<double> values = new List<double>();
+			foreach (Plotters.IPlotter plotter in plotters)
+			{
+				foreach (Series series in plotter.GetSeries())
+				{
+					// 自ChartAreaでなければスキップ
+					if (series.ChartArea != Name) continue;
+
+					// 目的のY軸でなければスキップ
+					if (series.YAxisType != at) continue;
+
+					foreach (DataPoint dp in series.Points)
+					{
+						// xが範囲外ならスキップ
+						if (dp.XValue < start || dp.XValue >= end) continue;
+
+						foreach (double y in dp.YValues)
+						{
+							values.Add(y);
+						}
+					}
+				}
+			}
+			return values;
 		}
 	}
 }

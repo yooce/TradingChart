@@ -84,5 +84,34 @@ namespace MagicalNuts
 			// 価格表示
 			PriceBoard.SetCandle(Candles[x], format);
 		}
+
+		public override void UpdateYSettings(int start, int end, List<Plotters.IPlotter> plotters)
+		{
+			// 価格
+
+			// 値取得
+			List<double> values = GetValues(start, end, plotters, AxisType.Secondary);
+			
+			if (values.Count > 0)
+			{
+				// 最高値、最安値取得
+				double max = (double)values.Max();
+				double min = (double)values.Min();
+
+				// 範囲決定
+				AxisY2.ScaleView.Size = (max - min) * (12.0 / 8.0);
+
+				// 位置決定
+				AxisY2.ScaleView.Position = min - AxisY2.ScaleView.Size / 4.0;
+			}
+
+			// 出来高
+
+			// 値取得
+			values = GetValues(start, end, plotters, AxisType.Primary);
+
+			// 範囲決定
+			if (values.Count > 0) AxisY.ScaleView.Size = values.Max() * 4;
+		}
 	}
 }

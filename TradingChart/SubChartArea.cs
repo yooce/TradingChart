@@ -36,5 +36,24 @@ namespace MagicalNuts
 
 			base.SetUp(chart);
 		}
+
+		public override void UpdateYSettings(int start, int end, List<Plotters.IPlotter> plotters)
+		{
+			// 値取得
+			List<double> values = GetValues(start, end, plotters, AxisType.Secondary);
+
+			if (values.Count > 0)
+			{
+				// 最高値、最安値を取得
+				double max = (double)values.Max();
+				double min = (double)values.Min();
+
+				// 範囲決定
+				AxisY2.ScaleView.Size = (max - min) * (12.0 / 10.0);
+
+				// 位置決定
+				AxisY2.ScaleView.Position = min - AxisY2.ScaleView.Size / 10.0;
+			}
+		}
 	}
 }
