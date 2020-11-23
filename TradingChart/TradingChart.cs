@@ -22,6 +22,15 @@ namespace MagicalNuts
 			}
 		}
 
+		public int ScreenCandleNum
+		{
+			set
+			{
+				MainChartArea.AxisX.ScaleView.Size = value;
+				UpdateChartSettings();
+			}
+		}
+
 		private CandleTerm _CandleTerm = CandleTerm.Dayly;
 		private MainChartArea MainChartArea = null;
 		private List<SubChartArea> SubChartAreas = null;

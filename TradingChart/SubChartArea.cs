@@ -24,7 +24,6 @@ namespace MagicalNuts
 			Splitter.Width = 100;
 
 			// X軸
-			AxisX.ScaleView.Size = 150;
 			AxisX.ScrollBar.Enabled = false;
 			AxisX.MajorTickMark.Enabled = false;
 			AxisX.MajorGrid.LineColor = Palette.GridColor;
