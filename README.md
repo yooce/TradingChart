@@ -2,7 +2,7 @@
 
 ![ScreenShot](https://github.com/yooce/TradingChart/blob/main/screenshot.png)
 
-トレード用チャートコントロールです。[TradingView](https://jp.tradingview.com/)
+トレード用チャートコントロールです。デザインは、ユーザビリティに定評のある[TradingView](https://jp.tradingview.com/)を参考にしています。
 
 # Requirement
 
