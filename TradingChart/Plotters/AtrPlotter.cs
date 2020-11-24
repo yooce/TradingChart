@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace MagicalNuts.Plotters
 			Series = new Series();
 			Series.ChartType = SeriesChartType.Line;
 			Series.YAxisType = AxisType.Secondary;
+			Series.Color = Color.FromArgb(163, 9, 27);
 		}
 
 		public override string GetName()

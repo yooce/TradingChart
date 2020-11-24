@@ -8,7 +8,7 @@ namespace MagicalNuts.Indicators
 {
 	public class AtrIndicator : IIndicator
 	{
-		public int Term { get; set; } = 10;
+		public int Term { get; set; } = 14;
 
 		public double[] GetData(IndicatorArgs args)
 		{
