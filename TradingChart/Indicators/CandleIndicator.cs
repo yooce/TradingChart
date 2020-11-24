@@ -1,15 +1,15 @@
-﻿using MagicalNuts.DataTypes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms.DataVisualization.Charting;
-
-namespace MagicalNuts.Indicators
+﻿namespace MagicalNuts.Indicators
 {
+	/// <summary>
+	/// ロウソク足インジケーターを表します。
+	/// </summary>
 	public class CandleIndicator : IIndicator
 	{
+		/// <summary>
+		/// 値を取得します。
+		/// </summary>
+		/// <param name="args">インジケーター引数</param>
+		/// <returns>値</returns>
 		public double[] GetData(IndicatorArgs args)
 		{
 			return new double[4] {

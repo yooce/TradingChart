@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms.DataVisualization.Charting;
-
-namespace MagicalNuts.Indicators
+﻿namespace MagicalNuts.Indicators
 {
+	/// <summary>
+	/// インジケーターのインターフェースを表します。
+	/// </summary>
 	public interface IIndicator
 	{
+		/// <summary>
+		/// 値を取得します。
+		/// </summary>
+		/// <param name="args">インジケーター引数</param>
+		/// <returns>値</returns>
 		double[] GetData(IndicatorArgs args);
 	}
 }
