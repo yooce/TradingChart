@@ -25,6 +25,15 @@ namespace MagicalNuts
 			return format;
 		}
 
+		public static int? GetDigitsFromFormat(string format)
+		{
+			// 認識できないフォーマットの場合
+			if (!System.Text.RegularExpressions.Regex.IsMatch(format, @"[0-9]+\.[0-9]+")) return null;
+
+			string[] strs = format.Split('.');
+			return strs[1].Length;
+		}
+
 		public static double GetCursorInterval(int digits)
 		{
 			double interval = 1;

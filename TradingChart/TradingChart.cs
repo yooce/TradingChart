@@ -165,7 +165,7 @@ namespace MagicalNuts
 			Candles = CandleUtility.ConvertTermFromDaily(DailyCandles, _CandleTerm);
 
 			// 主ChartArea
-			MainChartArea.SetCandles(Candles);
+			MainChartArea.SetCandles(Candles, CandleUtility.GetDigitsFromFormat(PriceFormat).Value);
 
 			// プロット
 			foreach (Plotters.IPlotter plotter in Plotters)
@@ -290,6 +290,67 @@ namespace MagicalNuts
 			}
 		}
 
+		/// <summary>
+		/// プロッターを追加します。
+		/// </summary>
+		/// <param name="plotter">プロッター</param>
+		public void AddPlotter(Plotters.IPlotter plotter)
+		{
+			// ChartArea設定
+			SubChartArea[] subChartAreas = plotter.SetChartArea(MainChartArea);
+
+			// 従ChartAreaを使う場合
+			if (subChartAreas != null)
+			{
+				foreach (SubChartArea subChartArea in subChartAreas)
+				{
+					AddSubChartArea(subChartArea);
+				}
+			}
+
+			// 追加
+			Plotters.Add(plotter);
+		}
+
+		/// <summary>
+		/// 従ChartAreaを追加します。
+		/// </summary>
+		/// <param name="subChartArea">従ChartArea</param>
+		private void AddSubChartArea(SubChartArea subChartArea)
+		{
+			// 準備
+			subChartArea.SetUp(this);
+
+			// 主ChartAreaとの連動設定
+			subChartArea.AlignWithChartArea = MainChartArea.Name;
+			subChartArea.AlignmentStyle
+				= AreaAlignmentStyles.Position | AreaAlignmentStyles.PlotPosition | AreaAlignmentStyles.Cursor | AreaAlignmentStyles.AxesView;
+
+			// 配置
+			if (SubChartAreas.Count == 0)
+			{
+				// 前がMainChartArea
+				subChartArea.Splitter.Y = 75;
+				MainChartArea.Position.Height = (float)subChartArea.Splitter.Y;
+			}
+			else
+			{
+				// 前がSubChartArea
+				SubChartArea prevSubChartArea = SubChartAreas.Last();
+				subChartArea.Splitter.Y = prevSubChartArea.Splitter.Y + prevSubChartArea.Position.Height / 2;
+				prevSubChartArea.Position.Height = prevSubChartArea.Position.Height / 2;
+			}
+			subChartArea.Position.X = 0;
+			subChartArea.Position.Y = (float)subChartArea.Splitter.Y;
+			subChartArea.Position.Width = 100;
+			subChartArea.Position.Height = 100 - (float)subChartArea.Splitter.Y;
+
+			// 追加
+			Annotations.Add(subChartArea.Splitter);
+			SubChartAreas.Add(subChartArea);
+			ChartAreas.Add(subChartArea);
+		}
+
 		#region イベントハンドラ
 
 		/// <summary>
@@ -360,10 +421,10 @@ namespace MagicalNuts
 					if (x < 0 || x >= Candles.Count) continue;
 
 					// カーソル更新
-					MainChartArea.UpdateCursors(mouse, result, PriceFormat);
+					MainChartArea.UpdateCursors(mouse, result, x, Candles.Count - 1, PriceFormat);
 					foreach (SubChartArea subChartArea in SubChartAreas)
 					{
-						subChartArea.UpdateCursors(mouse, result, PriceFormat);
+						subChartArea.UpdateCursors(mouse, result, x, Candles.Count - 1, PriceFormat);
 					}
 				}
 
@@ -443,66 +504,5 @@ namespace MagicalNuts
 		}
 
 		#endregion
-
-		/// <summary>
-		/// プロッターを追加します。
-		/// </summary>
-		/// <param name="plotter">プロッター</param>
-		public void AddPlotter(Plotters.IPlotter plotter)
-		{
-			// ChartArea設定
-			SubChartArea[] subChartAreas = plotter.SetChartArea(MainChartArea);
-
-			// 従ChartAreaを使う場合
-			if (subChartAreas != null)
-			{
-				foreach (SubChartArea subChartArea in subChartAreas)
-				{
-					AddSubChartArea(subChartArea);
-				}
-			}
-
-			// 追加
-			Plotters.Add(plotter);
-		}
-
-		/// <summary>
-		/// 従ChartAreaを追加します。
-		/// </summary>
-		/// <param name="subChartArea">従ChartArea</param>
-		private void AddSubChartArea(SubChartArea subChartArea)
-		{
-			// 準備
-			subChartArea.SetUp(this);
-
-			// 主ChartAreaとの連動設定
-			subChartArea.AlignWithChartArea = MainChartArea.Name;
-			subChartArea.AlignmentStyle
-				= AreaAlignmentStyles.Position | AreaAlignmentStyles.PlotPosition | AreaAlignmentStyles.Cursor | AreaAlignmentStyles.AxesView;
-
-			// 配置
-			if (SubChartAreas.Count == 0)
-			{
-				// 前がMainChartArea
-				subChartArea.Splitter.Y = 75;
-				MainChartArea.Position.Height = (float)subChartArea.Splitter.Y;
-			}
-			else
-			{
-				// 前がSubChartArea
-				SubChartArea prevSubChartArea = SubChartAreas.Last();
-				subChartArea.Splitter.Y = prevSubChartArea.Splitter.Y + prevSubChartArea.Position.Height / 2;
-				prevSubChartArea.Position.Height = prevSubChartArea.Position.Height / 2;
-			}
-			subChartArea.Position.X = 0;
-			subChartArea.Position.Y = (float)subChartArea.Splitter.Y;
-			subChartArea.Position.Width = 100;
-			subChartArea.Position.Height = 100 - (float)subChartArea.Splitter.Y;
-
-			// 追加
-			Annotations.Add(subChartArea.Splitter);
-			SubChartAreas.Add(subChartArea);
-			ChartAreas.Add(subChartArea);
-		}
 	}
 }

@@ -12,10 +12,15 @@ namespace MagicalNuts
 	/// </summary>
 	public class SubChartArea : ChartAreaBase
 	{
+		/// <summary>
+		/// 分割線
+		/// </summary>
 		public HorizontalLineAnnotation Splitter { get; private set; }
 
-		protected override int XCount => 0;
-
+		/// <summary>
+		/// 従ChartAreaを準備します。
+		/// </summary>
+		/// <param name="chart">チャートコントロール</param>
 		public override void SetUp(Chart chart)
 		{
 			// 分割線
@@ -40,14 +45,20 @@ namespace MagicalNuts
 			base.SetUp(chart);
 		}
 
-		public override void UpdateYSettings(int start, int end, List<Plotters.IPlotter> plotters)
+		/// <summary>
+		/// Y軸設定を更新します。
+		/// </summary>
+		/// <param name="start">開始x座標</param>
+		/// <param name="end_x">終了x座標</param>
+		/// <param name="plotters">プロッターのリスト</param>
+		public override void UpdateYSettings(int start_x, int end_x, List<Plotters.IPlotter> plotters)
 		{
-			// 値取得
-			List<double> values = GetValues(start, end, plotters, AxisType.Secondary);
+			// Y値取得
+			List<double> values = GetYValues(start_x, end_x, plotters, AxisType.Secondary);
 
 			if (values.Count > 0)
 			{
-				// 最高値、最安値を取得
+				// 最高値、最低値を取得
 				double max = (double)values.Max();
 				double min = (double)values.Min();
 

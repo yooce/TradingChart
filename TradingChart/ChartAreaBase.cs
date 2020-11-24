@@ -11,16 +11,24 @@ namespace MagicalNuts
 	/// </summary>
 	public abstract class ChartAreaBase : ChartArea
 	{
-		protected abstract int XCount { get; }
-
+		/// <summary>
+		/// カーソルラベルY
+		/// </summary>
 		private Label CursorLabelY = null;
 
+		/// <summary>
+		/// ChartAreaBaseクラスの新しいインスタンスを初期化します。
+		/// </summary>
 		public ChartAreaBase()
 		{
 			// 一意な名前
 			Name = Guid.NewGuid().ToString();
 		}
 
+		/// <summary>
+		/// ChartAreaを準備します。
+		/// </summary>
+		/// <param name="chart">チャートコントロール</param>
 		public virtual void SetUp(Chart chart)
 		{
 			// カーソルX
@@ -41,6 +49,10 @@ namespace MagicalNuts
 			chart.Controls.Add(CursorLabelY);
 		}
 
+		/// <summary>
+		/// カーソルラベルを準備します。
+		/// </summary>
+		/// <param name="label">カーソルラベル</param>
 		protected void SetUpCursorLabel(Label label)
 		{
 			label.BackColor = Palette.CursorLabelColor;
@@ -49,12 +61,15 @@ namespace MagicalNuts
 			label.TextAlign = ContentAlignment.MiddleCenter;
 		}
 
-		protected int GetXFromMouse(Point mouse)
-		{
-			return (int)(AxisX.PixelPositionToValue(mouse.X) + 0.5);
-		}
-
-		public virtual void UpdateCursors(Point mouse, HitTestResult result, string format)
+		/// <summary>
+		/// カーソルを更新します。
+		/// </summary>
+		/// <param name="mouse">マウス座標</param>
+		/// <param name="result">ヒットテストの結果</param>
+		/// <param name="x">x座標</param>
+		/// <param name="max_x">最大x座標</param>
+		/// <param name="format">価格表示のフォーマット</param>
+		public virtual void UpdateCursors(Point mouse, HitTestResult result, int x, int max_x, string format)
 		{
 			if (result.ChartArea == this)
 			{
@@ -67,7 +82,7 @@ namespace MagicalNuts
 				// カーソルラベルY
 				CursorLabelY.Text = AxisY2.PixelPositionToValue(mouse.Y).ToString(format);
 				CursorLabelY.Top = mouse.Y - CursorLabelY.Height / 2;
-				if (AxisX.ScaleView.Position + AxisX.ScaleView.Size >= XCount)
+				if (AxisX.ScaleView.Position + AxisX.ScaleView.Size > max_x)
 					CursorLabelY.Left = (int)(AxisX.ValueToPixelPosition(AxisX.ScaleView.Position + AxisX.ScaleView.Size) + 1);
 				else CursorLabelY.Left = (int)(AxisX.ValueToPixelPosition(AxisX.ScaleView.Position + AxisX.ScaleView.Size + 1) + 1);
 				CursorLabelY.Visible = true;
@@ -84,9 +99,23 @@ namespace MagicalNuts
 			}
 		}
 
-		public abstract void UpdateYSettings(int start, int end, List<Plotters.IPlotter> plotters);
+		/// <summary>
+		/// Y軸設定を更新します。
+		/// </summary>
+		/// <param name="start_x">開始x座標</param>
+		/// <param name="end_x">終了x座標</param>
+		/// <param name="plotters">プロッターのリスト</param>
+		public abstract void UpdateYSettings(int start_x, int end_x, List<Plotters.IPlotter> plotters);
 
-		protected List<double> GetValues(int start, int end, List<Plotters.IPlotter> plotters, AxisType at)
+		/// <summary>
+		/// 範囲内のY値を取得します。
+		/// </summary>
+		/// <param name="start_x">開始x座標</param>
+		/// <param name="end_x">終了x座標</param>
+		/// <param name="plotters">プロッターのリスト</param>
+		/// <param name="at">対象Y軸</param>
+		/// <returns></returns>
+		protected List<double> GetYValues(int start_x, int end_x, List<Plotters.IPlotter> plotters, AxisType at)
 		{
 			List<double> values = new List<double>();
 			foreach (Plotters.IPlotter plotter in plotters)
@@ -96,14 +125,15 @@ namespace MagicalNuts
 					// 自ChartAreaでなければスキップ
 					if (series.ChartArea != Name) continue;
 
-					// 目的のY軸でなければスキップ
+					// 対象Y軸でなければスキップ
 					if (series.YAxisType != at) continue;
 
 					foreach (DataPoint dp in series.Points)
 					{
 						// xが範囲外ならスキップ
-						if (dp.XValue < start || dp.XValue >= end) continue;
+						if (dp.XValue < start_x || dp.XValue >= end_x) continue;
 
+						// y値追加
 						foreach (double y in dp.YValues)
 						{
 							values.Add(y);
@@ -114,6 +144,9 @@ namespace MagicalNuts
 			return values;
 		}
 
+		/// <summary>
+		/// ChartAreaをクリアします。
+		/// </summary>
 		public void Clear()
 		{
 			AxisX.CustomLabels.Clear();

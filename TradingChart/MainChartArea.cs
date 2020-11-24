@@ -1,22 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MagicalNuts
 {
+	/// <summary>
+	/// 主ChartAreaを表します
+	/// </summary>
 	public class MainChartArea : ChartAreaBase
 	{
+		/// <summary>
+		/// ロウソク足のリスト
+		/// </summary>
 		protected List<DataTypes.Candle> Candles = null;
+
+		/// <summary>
+		/// カーソルラベルX
+		/// </summary>
 		private Label CursorLabelX = null;
+
+		/// <summary>
+		/// 価格表示板
+		/// </summary>
 		private PriceBoard PriceBoard = null;
 
-		protected override int XCount { get => Candles.Count; }
-
+		/// <summary>
+		/// 主ChartAreaを準備します。
+		/// </summary>
+		/// <param name="chart">チャートコントロール</param>
 		public override void SetUp(Chart chart)
 		{
 			// サイズ
@@ -30,16 +43,14 @@ namespace MagicalNuts
 			AxisX.MajorTickMark.Enabled = false;
 			AxisX.MajorGrid.LineColor = Palette.GridColor;
 			AxisX.ScrollBar.ButtonStyle = ScrollBarButtonStyles.SmallScroll;
-			AxisX.ScrollBar.ButtonColor = Color.FromArgb(127, Color.Silver);
+			AxisX.ScrollBar.ButtonColor = Palette.ScrollBarColor;
 			AxisX.LabelAutoFitMaxFontSize = 8;
 			AxisX.LabelAutoFitMinFontSize = 8;
 
 			// Y軸（株価）
-			AxisY2.ScaleView.Size = 3000;
 			AxisY2.MajorGrid.LineColor = Palette.GridColor;
 			AxisY2.ScrollBar.Enabled = false;
 			AxisY2.ScrollBar.ButtonStyle = ScrollBarButtonStyles.None;
-			AxisY2.LabelStyle.Format = "0.00";
 			AxisY2.LabelAutoFitMaxFontSize = 8;
 			AxisY2.LabelAutoFitMinFontSize = 8;
 			AxisY2.MajorTickMark.Size = 0.3f;
@@ -54,7 +65,7 @@ namespace MagicalNuts
 			SetUpCursorLabel(CursorLabelX);
 			chart.Controls.Add(CursorLabelX);
 
-			// 価格表示
+			// 価格表示板
 			PriceBoard = new PriceBoard();
 			PriceBoard.Top = chart.Margin.Top;
 			PriceBoard.Left = chart.Margin.Left;
@@ -64,33 +75,50 @@ namespace MagicalNuts
 			base.SetUp(chart);
 		}
 
-		public void SetCandles(List<DataTypes.Candle> candles)
+		/// <summary>
+		/// ロウソク足を設定します。
+		/// </summary>
+		/// <param name="candles">ロウソク足</param>
+		/// <param name="digits">小数点以下の桁数</param>
+		public void SetCandles(List<DataTypes.Candle> candles, int digits)
 		{
 			Candles = candles;
+			AxisY2.LabelStyle.Format = CandleUtility.GetPriceFormat(digits);
 		}
 
-		public override void UpdateCursors(Point mouse, HitTestResult result, string format)
+		/// <summary>
+		/// カーソルを更新します。
+		/// </summary>
+		/// <param name="mouse">マウス座標</param>
+		/// <param name="result">ヒットテストの結果</param>
+		/// <param name="x">x座標</param>
+		/// <param name="max_x">最大x座標</param>
+		/// <param name="format">価格表示のフォーマット</param>
+		public override void UpdateCursors(Point mouse, HitTestResult result, int x, int max_x, string format)
 		{
-			base.UpdateCursors(mouse, result, format);
-
-			// X取得
-			int x = GetXFromMouse(mouse);
+			base.UpdateCursors(mouse, result, x, max_x, format);
 
 			// カーソルラベルX
 			CursorLabelX.Text = Candles[x].DateTime.ToShortDateString();
 			CursorLabelX.Left = mouse.X - CursorLabelX.Width / 2;
 			CursorLabelX.Top = (int)(AxisY2.ValueToPixelPosition(AxisY2.ScaleView.Position) + 1 + AxisY2.ScrollBar.Size);
 
-			// 価格表示
+			// 価格表示板
 			PriceBoard.SetCandle(Candles[x], format);
 		}
 
-		public override void UpdateYSettings(int start, int end, List<Plotters.IPlotter> plotters)
+		/// <summary>
+		/// Y軸設定を更新します。
+		/// </summary>
+		/// <param name="start_x">開始x座標</param>
+		/// <param name="end_x">終了x座標</param>
+		/// <param name="plotters">プロッターのリスト</param>
+		public override void UpdateYSettings(int start_x, int end_x, List<Plotters.IPlotter> plotters)
 		{
 			// 価格
 
-			// 値取得
-			List<double> values = GetValues(start, end, plotters, AxisType.Secondary);
+			// Y値取得
+			List<double> values = GetYValues(start_x, end_x, plotters, AxisType.Secondary);
 			
 			if (values.Count > 0)
 			{
@@ -107,8 +135,8 @@ namespace MagicalNuts
 
 			// 出来高
 
-			// 値取得
-			values = GetValues(start, end, plotters, AxisType.Primary);
+			// Y値取得
+			values = GetYValues(start_x, end_x, plotters, AxisType.Primary);
 
 			// 範囲決定
 			if (values.Count > 0) AxisY.ScaleView.Size = values.Max() * 4;

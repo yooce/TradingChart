@@ -15,5 +15,6 @@ namespace MagicalNuts
 		public static readonly Color CursorColor = Color.FromArgb(115, 134, 149);
 		public static readonly Color CursorLabelColor = Color.FromArgb(76, 82, 93);
 		public static readonly Color SplitterColor = Color.Silver;
+		public static readonly Color ScrollBarColor = Color.FromArgb(127, Color.Silver);
 	}
 }
