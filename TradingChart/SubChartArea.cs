@@ -7,6 +7,9 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MagicalNuts
 {
+	/// <summary>
+	/// TradingChartの従ChartAreaを表します。
+	/// </summary>
 	public class SubChartArea : ChartAreaBase
 	{
 		public HorizontalLineAnnotation Splitter { get; private set; }

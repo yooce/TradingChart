@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MagicalNuts
 {
+	/// <summary>
+	/// TradingChartのChartAreaを表します。
+	/// </summary>
 	public abstract class ChartAreaBase : ChartArea
 	{
 		protected abstract int XCount { get; }
@@ -54,7 +54,7 @@ namespace MagicalNuts
 			return (int)(AxisX.PixelPositionToValue(mouse.X) + 0.5);
 		}
 
-		public virtual void Update(Point mouse, HitTestResult result, string format)
+		public virtual void UpdateCursors(Point mouse, HitTestResult result, string format)
 		{
 			if (result.ChartArea == this)
 			{
@@ -112,6 +112,11 @@ namespace MagicalNuts
 				}
 			}
 			return values;
+		}
+
+		public void Clear()
+		{
+			AxisX.CustomLabels.Clear();
 		}
 	}
 }

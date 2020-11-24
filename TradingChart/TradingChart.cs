@@ -10,8 +10,14 @@ using System.Xml.Schema;
 
 namespace MagicalNuts
 {
+	/// <summary>
+	/// トレード用チャートコントロールを表します。
+	/// </summary>
 	public class TradingChart : System.Windows.Forms.DataVisualization.Charting.Chart
 	{
+		/// <summary>
+		/// ロウソク足の期間を取得または設定します。
+		/// </summary>
 		public CandleTerm CandleTerm
 		{
 			get => _CandleTerm;
@@ -22,6 +28,9 @@ namespace MagicalNuts
 			}
 		}
 
+		/// <summary>
+		/// 画面あたりの足数を設定します。
+		/// </summary>
 		public int ScreenCandleNum
 		{
 			set
@@ -31,30 +40,74 @@ namespace MagicalNuts
 			}
 		}
 
+		/// <summary>
+		/// ロウソク足の期間
+		/// </summary>
 		private CandleTerm _CandleTerm = CandleTerm.Dayly;
+
+		/// <summary>
+		/// 主ChartArea
+		/// </summary>
 		private MainChartArea MainChartArea = null;
+
+		/// <summary>
+		/// 従ChartAreaのリスト
+		/// </summary>
 		private List<SubChartArea> SubChartAreas = null;
+
+		/// <summary>
+		/// 前回のx座標
+		/// </summary>
 		private double PreviousX = double.NaN;
+
+		/// <summary>
+		/// プロッターのリスト
+		/// </summary>
 		private List<Plotters.IPlotter> Plotters = null;
+
+		/// <summary>
+		/// 分割線のリスト
+		/// </summary>
 		private HorizontalLineAnnotation MovingSplitter = null;
+
+		/// <summary>
+		/// スクロール中かどうかを示します。
+		/// </summary>
 		private bool IsScrolling = false;
 
-		// 銘柄依存
+		/// <summary>
+		/// 日足のリスト
+		/// </summary>
 		private List<DataTypes.Candle> DailyCandles = null;
+
+		/// <summary>
+		/// 表示中のロウソク足のリスト
+		/// </summary>
 		private List<DataTypes.Candle> Candles = null;
+
+		/// <summary>
+		/// 価格表示フォーマット
+		/// </summary>
 		private string PriceFormat = null;
 
+		/// <summary>
+		/// TradingChartクラスの新しいインスタンスを初期化します。
+		/// </summary>
 		public TradingChart() : base()
 		{
 			SubChartAreas = new List<SubChartArea>();
 			Plotters = new List<Plotters.IPlotter>();
 		}
 
+		/// <summary>
+		/// チャートを準備します。
+		/// </summary>
 		public void SetUp()
 		{
 			// Chart
 			ChartAreas.Clear();
 
+			// Chartイベント
 			MouseWheel += new MouseEventHandler(chart_MouseWheel);
 			MouseMove += new MouseEventHandler(chart_MouseMove);
 			MouseDown += new MouseEventHandler(chart_MouseDown);
@@ -62,23 +115,30 @@ namespace MagicalNuts
 			AnnotationPositionChanging += new EventHandler<AnnotationPositionChangingEventArgs>(chart_AnnotationPositionChanging);
 			AxisScrollBarClicked += new EventHandler<ScrollBarEventArgs>(chart_AxisScrollBarClicked);
 
-			// MainChartArea
+			// 主ChartArea
 			MainChartArea = new MainChartArea();
 			ChartAreas.Add(MainChartArea);
 			MainChartArea.SetUp(this);
 
-			// Plotter
+			// デフォルトプロッター
 			AddPlotter(new Plotters.CandleProtter());
 			AddPlotter(new Plotters.VolumePlotter());
 		}
 
+		/// <summary>
+		/// 日足を設定します。
+		/// </summary>
+		/// <typeparam name="T">ロウソク足の型を指定します。</typeparam>
+		/// <param name="candles">ロウソク足のリスト</param>
+		/// <param name="digits">小数点以下の桁数</param>
+		/// <param name="term">表示するロウソク足の期間</param>
 		public void SetDailyCandles<T>(List<T> candles, int digits, CandleTerm term) where T : DataTypes.Candle
 		{
 			// 日足設定
 			DailyCandles = new List<DataTypes.Candle>();
 			DailyCandles.AddRange(candles);
 
-			// フォーマット取得
+			// 価格表示フォーマット取得
 			PriceFormat = CandleUtility.GetPriceFormat(digits);
 
 			// カーソルインターバル
@@ -88,16 +148,23 @@ namespace MagicalNuts
 			CandleTerm = term;
 		}
 
+		/// <summary>
+		/// ロウソク足を設定します。
+		/// </summary>
 		private void SetCandles()
 		{
 			// クリア
 			Series.Clear();
-			MainChartArea.AxisX.CustomLabels.Clear();
+			MainChartArea.Clear();
+			foreach (SubChartArea subChartArea in SubChartAreas)
+			{
+				subChartArea.Clear();
+			}
 
 			// 期間変換
 			Candles = CandleUtility.ConvertTermFromDaily(DailyCandles, _CandleTerm);
 
-			// MainChartArea
+			// 主ChartArea
 			MainChartArea.SetCandles(Candles);
 
 			// プロット
@@ -112,11 +179,11 @@ namespace MagicalNuts
 			{
 				if (IsNeedCustomLabel(Candles[x], prevLabelDateTime))
 				{
-					// MainChartArea
+					// 主ChartArea
 					MainChartArea.AxisX.CustomLabels.Add(new CustomLabel(x - 50.0, x + 50.0, GetCustomeLabelName(prevLabelDateTime
 						, Candles[x].DateTime), 0, LabelMarkStyle.None, GridTickTypes.Gridline));
 
-					// SubChartArea
+					// 従ChartArea
 					foreach (SubChartArea subChartArea in SubChartAreas)
 					{
 						subChartArea.AxisX.CustomLabels.Add(
@@ -139,9 +206,16 @@ namespace MagicalNuts
 			// 初期位置
 			MainChartArea.AxisX.ScaleView.Position = Candles.Count - MainChartArea.AxisX.ScaleView.Size;
 
+			// Y軸設定更新
 			UpdateYSettings();
 		}
 
+		/// <summary>
+		/// CustomLabelが必要かどうかを判定します。
+		/// </summary>
+		/// <param name="candle">ロウソク足</param>
+		/// <param name="prevDateTime">前回CustomLabelを表示した日時</param>
+		/// <returns>CustomLabelが必要かどうか</returns>
 		private bool IsNeedCustomLabel(DataTypes.Candle candle, DateTime? prevDateTime)
 		{
 			// 前回日時が無い
@@ -169,6 +243,12 @@ namespace MagicalNuts
 			return candle.DateTime >= nextDateTime;
 		}
 
+		/// <summary>
+		/// CustomeLabelの名前を取得します。
+		/// </summary>
+		/// <param name="prev">前回の日時</param>
+		/// <param name="next">今回の日時</param>
+		/// <returns></returns>
 		private string GetCustomeLabelName(DateTime? prev, DateTime next)
 		{
 			switch (_CandleTerm)
@@ -184,8 +264,12 @@ namespace MagicalNuts
 			return "";
 		}
 
+		/// <summary>
+		/// Y軸設定を更新します。
+		/// </summary>
 		private void UpdateYSettings()
 		{
+			// ウィンドウサイズ変更時にPositionがNaNの場合は何もしない
 			if (double.IsNaN(MainChartArea.AxisX.ScaleView.Position)) return;
 
 			// 開始位置決定
@@ -196,20 +280,30 @@ namespace MagicalNuts
 			// 終了位置決定
 			int end = start + (int)MainChartArea.AxisX.ScaleView.Size;
 
+			// 主ChartArea
 			MainChartArea.UpdateYSettings(start, end, Plotters);
+
+			// 従ChartArea
 			foreach (SubChartArea subChartArea in SubChartAreas)
 			{
 				subChartArea.UpdateYSettings(start, end, Plotters);
 			}
 		}
 
+		#region イベントハンドラ
+
+		/// <summary>
+		/// MouseMoveイベントを処理します。
+		/// </summary>
+		/// <param name="sender">イベント発行主体</param>
+		/// <param name="e">イベント引数</param>
 		private void chart_MouseMove(object sender, MouseEventArgs e)
 		{
 			if (MovingSplitter != null)
 			{
 				// 分割線の操作
 
-				// 配置
+				// ChartArea配置
 				for (int i = 0; i < SubChartAreas.Count; i++)
 				{
 					if (SubChartAreas[i].Splitter == MovingSplitter)
@@ -241,6 +335,7 @@ namespace MagicalNuts
 			{
 				// スクロールバーの操作
 
+				// Y軸設定更新
 				UpdateYSettings();
 			}
 			else
@@ -255,64 +350,110 @@ namespace MagicalNuts
 				HitTestResult[] results = HitTest(mouse.X, mouse.Y, false, ChartElementType.PlottingArea);
 				foreach (var result in results)
 				{
+					// プロットエリアでなければスキップ
 					if (result.ChartElementType != ChartElementType.PlottingArea || result.ChartArea == null) continue;
 
 					// グラフ上の位置取得
 					int x = (int)(MainChartArea.AxisX.PixelPositionToValue(mouse.X) + 0.5);
+
+					// ロウソク足の範囲外ならスキップ
 					if (x < 0 || x >= Candles.Count) continue;
 
-					// カーソル
-					MainChartArea.Update(mouse, result, PriceFormat);
+					// カーソル更新
+					MainChartArea.UpdateCursors(mouse, result, PriceFormat);
 					foreach (SubChartArea subChartArea in SubChartAreas)
 					{
-						subChartArea.Update(mouse, result, PriceFormat);
+						subChartArea.UpdateCursors(mouse, result, PriceFormat);
 					}
 				}
 
 				// スクロール
 				if (e.Button.HasFlag(MouseButtons.Left))
 				{
+					// マウス移動分だけチャートも移動
 					MainChartArea.AxisX.ScaleView.Position -= (MainChartArea.AxisX.PixelPositionToValue(mouse.X) - PreviousX);
+
+					// Y軸設定更新
 					UpdateYSettings();
 				}
 			}
 		}
 
+		/// <summary>
+		/// MouseDownイベントを処理します。
+		/// </summary>
+		/// <param name="sender">イベント発行主体</param>
+		/// <param name="e">イベント引数</param>
 		private void chart_MouseDown(object sender, MouseEventArgs e)
 		{
+			// x座標を覚えておく
 			PreviousX = MainChartArea.AxisX.PixelPositionToValue(e.Location.X);
 		}
 
+		/// <summary>
+		/// AxisScrollBarClickedイベントを処理します。
+		/// </summary>
+		/// <param name="sender">イベント発行主体</param>
+		/// <param name="e">イベント引数</param>
 		private void chart_AxisScrollBarClicked(object sender, ScrollBarEventArgs e)
 		{
 			IsScrolling = true;
 		}
 
+		/// <summary>
+		/// MouseUpイベントを処理します。
+		/// </summary>
+		/// <param name="sender">イベント発行主体</param>
+		/// <param name="e">イベント引数</param>
 		private void chart_MouseUp(object sender, MouseEventArgs e)
 		{
 			MovingSplitter = null;
 			IsScrolling = false;
+
+			// Y軸設定更新
 			UpdateYSettings();
 		}
 
+		/// <summary>
+		/// MouseWheelイベントを処理します。
+		/// </summary>
+		/// <param name="sender">イベント発行主体</param>
+		/// <param name="e">イベント引数</param>
 		private void chart_MouseWheel(object sender, MouseEventArgs e)
 		{
+			// ホイールを動かした分だけチャートも移動
 			MainChartArea.AxisX.ScaleView.Position += e.Delta / 120 * 60;
+
+			// Y軸設定更新
 			UpdateYSettings();
 		}
 
+		/// <summary>
+		/// AnnotationPositionChangingイベントを処理します。
+		/// </summary>
+		/// <param name="sender">イベント発行主体</param>
+		/// <param name="e">イベント引数</param>
 		private void chart_AnnotationPositionChanging(object sender, AnnotationPositionChangingEventArgs e)
 		{
+			// x座標は０固定
 			e.NewLocationX = 0;
+
+			// 操作中の分割線を覚えておく
 			MovingSplitter = sender as HorizontalLineAnnotation;
 		}
 
+		#endregion
+
+		/// <summary>
+		/// プロッターを追加します。
+		/// </summary>
+		/// <param name="plotter">プロッター</param>
 		public void AddPlotter(Plotters.IPlotter plotter)
 		{
 			// ChartArea設定
 			SubChartArea[] subChartAreas = plotter.SetChartArea(MainChartArea);
 
-			// SubChartAreaを使う場合
+			// 従ChartAreaを使う場合
 			if (subChartAreas != null)
 			{
 				foreach (SubChartArea subChartArea in subChartAreas)
@@ -321,15 +462,20 @@ namespace MagicalNuts
 				}
 			}
 
+			// 追加
 			Plotters.Add(plotter);
 		}
 
+		/// <summary>
+		/// 従ChartAreaを追加します。
+		/// </summary>
+		/// <param name="subChartArea">従ChartArea</param>
 		private void AddSubChartArea(SubChartArea subChartArea)
 		{
-			// セットアップ
+			// 準備
 			subChartArea.SetUp(this);
 
-			// MainChartAreaと連動
+			// 主ChartAreaとの連動設定
 			subChartArea.AlignWithChartArea = MainChartArea.Name;
 			subChartArea.AlignmentStyle
 				= AreaAlignmentStyles.Position | AreaAlignmentStyles.PlotPosition | AreaAlignmentStyles.Cursor | AreaAlignmentStyles.AxesView;

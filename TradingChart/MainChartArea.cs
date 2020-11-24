@@ -69,9 +69,9 @@ namespace MagicalNuts
 			Candles = candles;
 		}
 
-		public override void Update(Point mouse, HitTestResult result, string format)
+		public override void UpdateCursors(Point mouse, HitTestResult result, string format)
 		{
-			base.Update(mouse, result, format);
+			base.UpdateCursors(mouse, result, format);
 
 			// X取得
 			int x = GetXFromMouse(mouse);
