@@ -1,22 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace MagicalNuts
 {
+	/// <summary>
+	/// 価格表示板を表します。
+	/// </summary>
 	public partial class PriceBoard : UserControl
 	{
+		/// <summary>
+		/// PriceBoardクラスの新しいインスタンスを初期化します。
+		/// </summary>
 		public PriceBoard()
 		{
 			InitializeComponent();
 		}
 
+		/// <summary>
+		/// マージンを設定します。
+		/// </summary>
+		/// <param name="pos">マージン座標</param>
 		public void SetMargin(Point pos)
 		{
 			// X
@@ -38,8 +41,14 @@ namespace MagicalNuts
 			labelVolumeValue.Top = labelOpen.Top;
 		}
 
+		/// <summary>
+		/// ロウソク足を設定します。
+		/// </summary>
+		/// <param name="candle">ロウソク足</param>
+		/// <param name="format">価格表示のフォーマット</param>
 		public void SetCandle(DataTypes.Candle candle, string format)
 		{
+			// ロウソク足が無い場合は非表示
 			if (candle == null)
 			{
 				Visible = false;
@@ -99,6 +108,7 @@ namespace MagicalNuts
 			labelVolume.AlignLeft(labelUpDownP);
 			labelVolumeValue.AlignLeft(labelVolume);
 
+			// 表示
 			Visible = true;
 		}
 	}

@@ -1,25 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace MagicalNuts
 {
+	/// <summary>
+	/// Controlの拡張を表します。
+	/// </summary>
 	public static class ControlExtensions
 	{
+		/// <summary>
+		/// 左寄せをします。
+		/// </summary>
+		/// <param name="me">自コントロール</param>
+		/// <param name="baseCtrl">基準コントロール</param>
 		public static void AlignLeft(this Control me, Control baseCtrl)
 		{
 			me.Left = baseCtrl.Left + baseCtrl.Width + baseCtrl.Margin.Right + me.Margin.Left;
 		}
 
+		/// <summary>
+		/// 上寄せをします。
+		/// </summary>
+		/// <param name="me">自コントロール</param>
+		/// <param name="baseCtrl">基準コントロール</param>
 		public static void AlignTop(this Control me, Control baseCtrl)
 		{
 			me.Top = baseCtrl.Top + baseCtrl.Height + baseCtrl.Margin.Bottom + me.Margin.Top;
 		}
 
+		/// <summary>
+		/// クリップボードにキャプチャ画像をコピーします。
+		/// </summary>
+		/// <param name="me">自コントロール</param>
+		/// <param name="zoom">倍率</param>
 		public static void CopyToClipboard(this Control me, double zoom)
 		{
 			// キャプチャ

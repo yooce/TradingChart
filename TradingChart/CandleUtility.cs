@@ -1,19 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace MagicalNuts
 {
+	/// <summary>
+	/// ロウソク足の期間を表します。
+	/// </summary>
 	public enum CandleTerm
 	{
 		Dayly = 0, Weekly, Monthly, Yearly
 	}
 
+	/// <summary>
+	/// ロウソク足のユーティリティを表します。
+	/// </summary>
 	public static class CandleUtility
 	{
+		/// <summary>
+		/// 価格表示のフォーマットを取得します。
+		/// </summary>
+		/// <param name="digits">小数点以下の桁数</param>
+		/// <returns>価格表示のフォーマット</returns>
 		public static string GetPriceFormat(int digits)
 		{
 			string format = "0";
@@ -25,6 +32,11 @@ namespace MagicalNuts
 			return format;
 		}
 
+		/// <summary>
+		/// 価格表示のフォーマットから小数点以下の桁数を取得します。
+		/// </summary>
+		/// <param name="format">価格表示のフォーマット</param>
+		/// <returns>小数点以下の桁数</returns>
 		public static int? GetDigitsFromFormat(string format)
 		{
 			// 認識できないフォーマットの場合
@@ -34,6 +46,11 @@ namespace MagicalNuts
 			return strs[1].Length;
 		}
 
+		/// <summary>
+		/// カーソルのインターバルを取得します。
+		/// </summary>
+		/// <param name="digits">小数点以下の桁数</param>
+		/// <returns>カーソルのインターバル</returns>
 		public static double GetCursorInterval(int digits)
 		{
 			double interval = 1;
@@ -44,6 +61,12 @@ namespace MagicalNuts
 			return interval;
 		}
 
+		/// <summary>
+		/// ロウソク足を日足から目的の足に変換します。
+		/// </summary>
+		/// <param name="daily">日足</param>
+		/// <param name="term">ロウソク足の期間</param>
+		/// <returns>目的の足のロウソク足のリスト</returns>
 		public static List<DataTypes.Candle> ConvertTermFromDaily(List<DataTypes.Candle> daily, CandleTerm term)
 		{
 			// ソート
@@ -59,7 +82,7 @@ namespace MagicalNuts
 			DataTypes.Candle converted = null;
 			foreach (DataTypes.Candle candle in daily)
 			{
-				// ロウソク足切替
+				// 次のロウソク足へ
 				if (IsCandleChange(candle, prevDateTime, term))
 				{
 					// ロウソク足追加
@@ -75,17 +98,26 @@ namespace MagicalNuts
 					converted.Volume = 0;
 				}
 
+				// 値設定
 				if (candle.High > converted.High) converted.High = candle.High;
 				if (candle.Low < converted.Low) converted.Low = candle.Low;
 				converted.Close = candle.Close;
 				converted.Volume += candle.Volume;
 
+				// 日時を覚えておく
 				prevDateTime = candle.DateTime;
 			}
 
 			return converteds;
 		}
 
+		/// <summary>
+		/// ロウソク足の切り替えが必要かどうか判定します。
+		/// </summary>
+		/// <param name="candle">ロウソク足</param>
+		/// <param name="prevDateTime">前回のロウソク足の日時</param>
+		/// <param name="term">ロウソク足の期間</param>
+		/// <returns>ロウソク足の切り替えが必要かどうか</returns>
 		private static bool IsCandleChange(DataTypes.Candle candle, DateTime? prevDateTime, CandleTerm term)
 		{
 			// 前回日時が無い
