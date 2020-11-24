@@ -9,6 +9,8 @@ namespace MagicalNuts.TradingChartSample
 		public Form1()
 		{
 			InitializeComponent();
+
+			comboBox1.SelectedIndex = 0;
 		}
 
 		private void Form1_Load(object sender, EventArgs e)
@@ -20,13 +22,35 @@ namespace MagicalNuts.TradingChartSample
 			sr.Close();
 
 			// デシリアライズ
-			List<DataTypes.Candle> candles = Utf8Json.JsonSerializer.Deserialize<List<DataTypes.Candle>>(str);
+			DataTypes.Candle[] candles = Utf8Json.JsonSerializer.Deserialize<DataTypes.Candle[]>(str);
 
 			// セットアップ
 			tradingChart1.SetUp();
 
 			// 日足設定
 			tradingChart1.SetDailyCandles(candles, 2, CandleTerm.Dayly);
+		}
+
+		private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			tradingChart1.CandleTerm = (CandleTerm)comboBox1.SelectedIndex;
+		}
+
+		private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+		{
+			tradingChart1.ScreenCandleNum = (int)numericUpDown1.Value;
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			if (numericUpDown1.Value - 50 < numericUpDown1.Minimum) numericUpDown1.Value = numericUpDown1.Minimum;
+			else numericUpDown1.Value -= 50;
+		}
+
+		private void button2_Click(object sender, EventArgs e)
+		{
+			if (numericUpDown1.Value + 50 > numericUpDown1.Maximum) numericUpDown1.Value = numericUpDown1.Maximum;
+			else numericUpDown1.Value += 50;
 		}
 	}
 }

@@ -129,10 +129,10 @@ namespace MagicalNuts
 		/// 日足を設定します。
 		/// </summary>
 		/// <typeparam name="T">ロウソク足の型を指定します。</typeparam>
-		/// <param name="candles">ロウソク足のリスト</param>
+		/// <param name="candles">ロウソク足の配列</param>
 		/// <param name="digits">小数点以下の桁数</param>
 		/// <param name="term">表示するロウソク足の期間</param>
-		public void SetDailyCandles<T>(List<T> candles, int digits, CandleTerm term) where T : DataTypes.Candle
+		public void SetDailyCandles<T>(T[] candles, int digits, CandleTerm term) where T : DataTypes.Candle
 		{
 			// 日足設定
 			DailyCandles = new List<DataTypes.Candle>();
