@@ -41,6 +41,8 @@ namespace MagicalNuts
 			AxisY2.ScrollBar.Enabled = false;
 			AxisY2.ScrollBar.ButtonStyle = ScrollBarButtonStyles.None;
 			AxisY2.Crossing = 0.0;
+			AxisY2.LabelAutoFitMaxFontSize = 8;
+			AxisY2.LabelAutoFitMinFontSize = 8;
 
 			base.SetUp(chart);
 		}

@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Indicators\AtrIndicator.cs" />
     <Compile Include="Indicators\CandleIndicator.cs" />
     <Compile Include="Indicators\IIndicator.cs" />
     <Compile Include="Indicators\IndicatorArgs.cs" />

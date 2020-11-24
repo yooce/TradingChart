@@ -7,7 +7,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MagicalNuts.Plotters
 {
-	public class AtrPlotter : IPlotter
+	public class AtrPlotter : IndicatorPlotter<Indicators.AtrIndicator>
 	{
 		private Series Series = null;
 
@@ -18,30 +18,34 @@ namespace MagicalNuts.Plotters
 			Series.YAxisType = AxisType.Secondary;
 		}
 
-		public string GetName()
+		public override string GetName()
 		{
 			return "ATR";
 		}
 
-		public Series[] GetSeries()
+		public override Series[] GetSeries()
 		{
 			return new Series[] { Series };
 		}
 
-		public void Plot(List<DataTypes.Candle> candles)
+		public override void Plot(List<DataTypes.Candle> candles)
 		{
+			base.Plot(candles);
+
 			// クリア
 			Series.Points.Clear();
 
 			// プロット
 			for (int x = 0; x < candles.Count; x++)
 			{
-				DataPoint dp = new DataPoint(x, Math.Sin((double)x / 4.0f));
-				Series.Points.Add(dp);
+				double[] data = Indicator.GetData(new Indicators.IndicatorArgs(GetCandlesForIndicator(x)));
+				if (data == null) continue;
+
+				Series.Points.Add(new DataPoint(x, data));
 			}
 		}
 
-		public SubChartArea[] SetChartArea(MainChartArea mainChartArea)
+		public override SubChartArea[] SetChartArea(MainChartArea mainChartArea)
 		{
 			SubChartArea subChartArea = new SubChartArea();
 			Series.ChartArea = subChartArea.Name;
