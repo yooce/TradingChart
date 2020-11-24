@@ -74,15 +74,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DataTypes\DataTypes.csproj">
-      <Project>{7924255b-1542-480b-929e-ee4d130b2b23}</Project>
-      <Name>DataTypes</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="PriceBoard.resx">
       <DependentUpon>PriceBoard.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataTypes\DataTypes.csproj">
+      <Project>{91f48d95-009d-47e5-a09e-c6032ff22f85}</Project>
+      <Name>DataTypes</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
