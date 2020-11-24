@@ -1,5 +1,5 @@
 ﻿
-namespace TradingChartSample
+namespace MagicalNuts.TradingChartSample
 {
 	partial class Form1
 	{
@@ -38,6 +38,7 @@ namespace TradingChartSample
 			this.tradingChart1.CandleTerm = MagicalNuts.CandleTerm.Dayly;
 			this.tradingChart1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tradingChart1.Location = new System.Drawing.Point(0, 0);
+			this.tradingChart1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.tradingChart1.Name = "tradingChart1";
 			this.tradingChart1.Size = new System.Drawing.Size(1008, 537);
 			this.tradingChart1.TabIndex = 0;
@@ -45,12 +46,15 @@ namespace TradingChartSample
 			// 
 			// Form1
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1008, 537);
 			this.Controls.Add(this.tradingChart1);
+			this.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.Name = "Form1";
 			this.Text = "Form1";
+			this.Load += new System.EventHandler(this.Form1_Load);
 			((System.ComponentModel.ISupportInitialize)(this.tradingChart1)).EndInit();
 			this.ResumeLayout(false);
 
