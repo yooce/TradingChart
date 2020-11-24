@@ -9,7 +9,7 @@ namespace MagicalNuts.Indicators
 {
 	public class MovingAverageIndicator : IIndicator
 	{
-		private int Term = 25;
+		public int Term { get; set; } = 25;
 
 		public double[] GetData(IndicatorArgs args)
 		{

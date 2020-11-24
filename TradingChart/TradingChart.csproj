@@ -50,6 +50,7 @@
     <Compile Include="Indicators\CandleIndicator.cs" />
     <Compile Include="Indicators\IIndicator.cs" />
     <Compile Include="Indicators\IndicatorArgs.cs" />
+    <Compile Include="Indicators\MacdIndicator.cs" />
     <Compile Include="Indicators\MovingAverageIndicator.cs" />
     <Compile Include="Indicators\VolumeIndicator.cs" />
     <Compile Include="Plotters\AtrPlotter.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Plotters\CandlePlotter.cs" />
     <Compile Include="Plotters\IndicatorPlotter.cs" />
     <Compile Include="Plotters\IPlotters.cs" />
+    <Compile Include="Plotters\MacdPlotter.cs" />
     <Compile Include="Plotters\MovingAveragePlotter.cs" />
     <Compile Include="Plotters\VolumePlotter.cs" />
     <Compile Include="PriceBoard.cs">

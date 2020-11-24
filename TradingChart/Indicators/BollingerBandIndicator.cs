@@ -9,13 +9,15 @@ namespace MagicalNuts.Indicators
 {
 	public class BollingerBandIndicator : IIndicator
 	{
-		private int Term = 25;
-		private double Deviation = 2.0;
+		public int Term { get; set; } = 25;
+		public double Deviation { get; set; } = 2.0;
+
 		private MovingAverageIndicator MovingAverageIndicator = null;
 
 		public BollingerBandIndicator()
 		{
 			MovingAverageIndicator = new MovingAverageIndicator();
+			MovingAverageIndicator.Term = Term;
 		}
 
 		public double[] GetData(IndicatorArgs args)
