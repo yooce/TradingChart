@@ -18,12 +18,12 @@ namespace MagicalNuts
 		/// <summary>
 		/// ロウソク足の期間を取得または設定します。
 		/// </summary>
-		public CandleTerm CandleTerm
+		public CandlePeriod CandlePeriod
 		{
-			get => _CandleTerm;
+			get => _CandlePeriod;
 			set
 			{
-				_CandleTerm = value;
+				_CandlePeriod = value;
 				if (DailyCandles != null) SetCandles();
 			}
 		}
@@ -43,7 +43,7 @@ namespace MagicalNuts
 		/// <summary>
 		/// ロウソク足の期間
 		/// </summary>
-		private CandleTerm _CandleTerm = CandleTerm.Dayly;
+		private CandlePeriod _CandlePeriod = CandlePeriod.Dayly;
 
 		/// <summary>
 		/// 主ChartArea
@@ -131,8 +131,8 @@ namespace MagicalNuts
 		/// <typeparam name="T">ロウソク足の型を指定します。</typeparam>
 		/// <param name="candles">ロウソク足の配列</param>
 		/// <param name="digits">小数点以下の桁数</param>
-		/// <param name="term">表示するロウソク足の期間</param>
-		public void SetDailyCandles<T>(T[] candles, int digits, CandleTerm term) where T : DataTypes.Candle
+		/// <param name="period">表示するロウソク足の期間</param>
+		public void SetDailyCandles<T>(T[] candles, int digits, CandlePeriod period) where T : DataTypes.Candle
 		{
 			// 日足設定
 			DailyCandles = new List<DataTypes.Candle>();
@@ -145,7 +145,7 @@ namespace MagicalNuts
 			MainChartArea.CursorY.Interval = CandleUtility.GetCursorInterval(digits);
 
 			// 期間変換
-			CandleTerm = term;
+			CandlePeriod = period;
 		}
 
 		/// <summary>
@@ -162,7 +162,7 @@ namespace MagicalNuts
 			}
 
 			// 期間変換
-			Candles = CandleUtility.ConvertTermFromDaily(DailyCandles, _CandleTerm);
+			Candles = CandleUtility.ConvertPeriodFromDaily(DailyCandles, _CandlePeriod);
 
 			// 主ChartArea
 			MainChartArea.SetCandles(Candles, CandleUtility.GetDigitsFromFormat(PriceFormat).Value);
@@ -223,18 +223,18 @@ namespace MagicalNuts
 
 			// 次のDateTime算出
 			DateTime nextDateTime = DateTime.MinValue;
-			switch (_CandleTerm)
+			switch (_CandlePeriod)
 			{
-				case CandleTerm.Dayly:
+				case CandlePeriod.Dayly:
 					nextDateTime = new DateTime(prevDateTime.Value.Year, prevDateTime.Value.Month, 1).AddMonths(1);
 					break;
-				case CandleTerm.Weekly:
+				case CandlePeriod.Weekly:
 					nextDateTime = new DateTime(prevDateTime.Value.Year, (prevDateTime.Value.Month - 1) / 3 * 3 + 1, 1).AddMonths(3);
 					break;
-				case CandleTerm.Monthly:
+				case CandlePeriod.Monthly:
 					nextDateTime = new DateTime(prevDateTime.Value.Year, 1, 1).AddYears(1);
 					break;
-				case CandleTerm.Yearly:
+				case CandlePeriod.Yearly:
 					nextDateTime = new DateTime(prevDateTime.Value.Year / 10 * 10, 1, 1).AddYears(10);
 					break;
 			}
@@ -251,14 +251,14 @@ namespace MagicalNuts
 		/// <returns></returns>
 		private string GetCustomeLabelName(DateTime? prev, DateTime next)
 		{
-			switch (_CandleTerm)
+			switch (_CandlePeriod)
 			{
-				case CandleTerm.Dayly:
-				case CandleTerm.Weekly:
+				case CandlePeriod.Dayly:
+				case CandlePeriod.Weekly:
 					if (prev == null || prev.Value.Year != next.Year) return next.ToString("yyyy");
 					return next.ToString("M月");
-				case CandleTerm.Monthly:
-				case CandleTerm.Yearly:
+				case CandlePeriod.Monthly:
+				case CandlePeriod.Yearly:
 					return next.ToString("yyyy");
 			}
 			return "";

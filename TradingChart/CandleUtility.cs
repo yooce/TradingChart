@@ -6,7 +6,7 @@ namespace MagicalNuts
 	/// <summary>
 	/// ロウソク足の期間を表します。
 	/// </summary>
-	public enum CandleTerm
+	public enum CandlePeriod
 	{
 		Dayly = 0, Weekly, Monthly, Yearly
 	}
@@ -65,15 +65,15 @@ namespace MagicalNuts
 		/// ロウソク足を日足から目的の足に変換します。
 		/// </summary>
 		/// <param name="daily">日足</param>
-		/// <param name="term">ロウソク足の期間</param>
+		/// <param name="period">ロウソク足の期間</param>
 		/// <returns>目的の足のロウソク足のリスト</returns>
-		public static List<DataTypes.Candle> ConvertTermFromDaily(List<DataTypes.Candle> daily, CandleTerm term)
+		public static List<DataTypes.Candle> ConvertPeriodFromDaily(List<DataTypes.Candle> daily, CandlePeriod period)
 		{
 			// ソート
 			daily.Sort(DataTypes.Candle.Compare);
 
 			// 日足ならそのまま返す
-			if (term == CandleTerm.Dayly) return daily;
+			if (period == CandlePeriod.Dayly) return daily;
 
 			// 器作成
 			List<DataTypes.Candle> converteds = new List<DataTypes.Candle>();
@@ -83,7 +83,7 @@ namespace MagicalNuts
 			foreach (DataTypes.Candle candle in daily)
 			{
 				// 次のロウソク足へ
-				if (IsCandleChange(candle, prevDateTime, term))
+				if (IsCandleChange(candle, prevDateTime, period))
 				{
 					// ロウソク足追加
 					if (converted != null) converteds.Add(converted);
@@ -116,31 +116,31 @@ namespace MagicalNuts
 		/// </summary>
 		/// <param name="candle">ロウソク足</param>
 		/// <param name="prevDateTime">前回のロウソク足の日時</param>
-		/// <param name="term">ロウソク足の期間</param>
+		/// <param name="period">ロウソク足の期間</param>
 		/// <returns>ロウソク足の切り替えが必要かどうか</returns>
-		private static bool IsCandleChange(DataTypes.Candle candle, DateTime? prevDateTime, CandleTerm term)
+		private static bool IsCandleChange(DataTypes.Candle candle, DateTime? prevDateTime, CandlePeriod period)
 		{
 			// 前回日時が無い
 			if (prevDateTime == null) return true;
 
 			// 次のDateTime算出
 			DateTime nextDateTime = DateTime.MinValue;
-			switch (term)
+			switch (period)
 			{
-				case CandleTerm.Dayly:
+				case CandlePeriod.Dayly:
 					nextDateTime = prevDateTime.Value.Date.AddDays(1);
 					break;
-				case CandleTerm.Weekly:
+				case CandlePeriod.Weekly:
 					nextDateTime = prevDateTime.Value.Date.AddDays(1);
 					while (nextDateTime.DayOfWeek != DayOfWeek.Monday)
 					{
 						nextDateTime = nextDateTime.AddDays(1);
 					}
 					break;
-				case CandleTerm.Monthly:
+				case CandlePeriod.Monthly:
 					nextDateTime = new DateTime(prevDateTime.Value.Year, prevDateTime.Value.Month, 1).AddMonths(1);
 					break;
-				case CandleTerm.Yearly:
+				case CandlePeriod.Yearly:
 					nextDateTime = new DateTime(prevDateTime.Value.Year, 1, 1).AddYears(1);
 					break;
 			}

@@ -8,14 +8,14 @@ namespace MagicalNuts.Indicators
 {
 	public class AtrIndicator : IIndicator
 	{
-		public int Term { get; set; } = 14;
+		public int Period { get; set; } = 14;
 
 		public double[] GetData(IndicatorArgs args)
 		{
-			if (args.Candles.Count < Term + 1) return null;
+			if (args.Candles.Count < Period + 1) return null;
 
 			decimal sum = 0;
-			for (int i = 0; i < Term; i++)
+			for (int i = 0; i < Period; i++)
 			{
 				sum += new decimal[]
 				{
@@ -24,7 +24,7 @@ namespace MagicalNuts.Indicators
 					Math.Abs(args.Candles[i].Low - args.Candles[i + 1].Close)	// 当日安値 - 前日終値
 				}.Max();
 			}
-			return new double[] { (double)(sum / Term) };
+			return new double[] { (double)(sum / Period) };
 		}
 	}
 }
