@@ -1,24 +1,43 @@
-﻿using MagicalNuts.DataTypes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
 namespace MagicalNuts.Indicators
 {
+	/// <summary>
+	/// 移動平均の計算方法
+	/// </summary>
 	public enum MaMethod
 	{
-		Sma, Ema, Smma, Lwma
+		Sma,	// 単純移動平均
+		Ema,    // 指数移動平均
+		Smma,   // 平滑移動平均
+		Lwma    // 加重移動平均
 	}
 
+	/// <summary>
+	/// 移動平均インジケーターを表します。
+	/// </summary>
 	public class MovingAverageIndicator : IIndicator
 	{
+		/// <summary>
+		/// 期間
+		/// </summary>
 		public int Period { get; set; } = 25;
+
+		/// <summary>
+		/// 移動平均の計算方法
+		/// </summary>
 		public MaMethod MaMethod { get; set; } = MaMethod.Sma;
 
+		/// <summary>
+		/// 前回の移動平均
+		/// </summary>
 		private double? PreviousMa = null;
 
+		/// <summary>
+		/// 値を取得します。
+		/// </summary>
+		/// <param name="args">インジケーター引数</param>
+		/// <returns>値</returns>
 		public double[] GetData(IndicatorArgs args)
 		{
 			// 必要期間に満たない
@@ -33,6 +52,13 @@ namespace MagicalNuts.Indicators
 			return new double[] { ma };
 		}
 
+		/// <summary>
+		/// 移動平均を取得します。
+		/// </summary>
+		/// <param name="data">対象データ</param>
+		/// <param name="method">移動平均の計算方法</param>
+		/// <param name="prev_ma">前回の移動平均</param>
+		/// <returns>移動平均</returns>
 		public static double GetMovingAverage(double[] data, MaMethod method, double? prev_ma)
 		{
 			switch (method)

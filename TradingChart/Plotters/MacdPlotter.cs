@@ -1,17 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MagicalNuts.Plotters
 {
+	/// <summary>
+	/// MACDのプロッターを表します。
+	/// </summary>
 	public class MacdPlotter : IndicatorPlotter<Indicators.MacdIndicator>
 	{
+		/// <summary>
+		/// Series
+		/// </summary>
 		private Series[] Series = null;
 
+		/// <summary>
+		/// MacdPlotterの新しいインスタンスを初期化します。
+		/// </summary>
 		public MacdPlotter()
 		{
 			Series = new Series[3];
@@ -36,16 +41,28 @@ namespace MagicalNuts.Plotters
 			}
 		}
 
+		/// <summary>
+		/// プロッター名を取得します。
+		/// </summary>
+		/// <returns>プロッター名</returns>
 		public override string GetName()
 		{
 			return "MACD";
 		}
 
+		/// <summary>
+		/// Seriesを取得します。
+		/// </summary>
+		/// <returns>Seriesの配列</returns>
 		public override Series[] GetSeries()
 		{
 			return Series;
 		}
 
+		/// <summary>
+		/// データをプロットします。
+		/// </summary>
+		/// <param name="candles">ロウソク足のリスト</param>
 		public override void Plot(List<DataTypes.Candle> candles)
 		{
 			base.Plot(candles);
@@ -63,9 +80,13 @@ namespace MagicalNuts.Plotters
 				double[] data = Indicator.GetData(new Indicators.IndicatorArgs(GetCandlesForIndicator(x)));
 				if (data == null) continue;
 
+				// MACD
 				Series[0].Points.Add(new DataPoint(x, data[0]));
+
+				// MACDシグナル
 				Series[1].Points.Add(new DataPoint(x, data[1]));
 
+				// MACDオシレーター
 				double y = data[0] - data[1];
 				DataPoint dp = new DataPoint(x, y);
 				if (y >= 0)
@@ -84,6 +105,11 @@ namespace MagicalNuts.Plotters
 			}
 		}
 
+		/// <summary>
+		/// ChartAreaを設定します。
+		/// </summary>
+		/// <param name="mainChartArea">主ChartArea</param>
+		/// <returns>使用する従ChartAreaの配列</returns>
 		public override SubChartArea[] SetChartArea(MainChartArea mainChartArea)
 		{
 			SubChartArea subChartArea = new SubChartArea();

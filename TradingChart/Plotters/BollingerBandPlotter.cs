@@ -1,17 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MagicalNuts.Plotters
 {
+	/// <summary>
+	/// ボリンジャーバンドのプロッターを表します。
+	/// </summary>
 	public class BollingerBandPlotter : IndicatorPlotter<Indicators.BollingerBandIndicator>
 	{
+		/// <summary>
+		/// Series
+		/// </summary>
 		private Series[] Series = null;
 
+		/// <summary>
+		/// BollingerBandPlotterクラスの新しいインスタンスを初期化します。
+		/// </summary>
 		public BollingerBandPlotter()
 		{
 			Series = new Series[4];
@@ -37,16 +42,28 @@ namespace MagicalNuts.Plotters
 			}
 		}
 
+		/// <summary>
+		/// プロッター名を取得します。
+		/// </summary>
+		/// <returns>プロッター名</returns>
 		public override string GetName()
 		{
 			return "ボリンジャーバンド";
 		}
 
+		/// <summary>
+		/// Seriesを取得します。
+		/// </summary>
+		/// <returns>Seriesの配列</returns>
 		public override Series[] GetSeries()
 		{
 			return Series;
 		}
 
+		/// <summary>
+		/// データをプロットします。
+		/// </summary>
+		/// <param name="candles">ロウソク足のリスト</param>
 		public override void Plot(List<DataTypes.Candle> candles)
 		{
 			base.Plot(candles);
@@ -70,6 +87,11 @@ namespace MagicalNuts.Plotters
 			}
 		}
 
+		/// <summary>
+		/// ChartAreaを設定します。
+		/// </summary>
+		/// <param name="mainChartArea">主ChartArea</param>
+		/// <returns>使用する従ChartAreaの配列</returns>
 		public override SubChartArea[] SetChartArea(MainChartArea mainChartArea)
 		{
 			foreach (Series series in Series)

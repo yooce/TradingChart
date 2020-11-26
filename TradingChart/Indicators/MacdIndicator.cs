@@ -1,23 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace MagicalNuts.Indicators
 {
+	/// <summary>
+	/// MACDインジケーターを表します。
+	/// </summary>
 	public class MacdIndicator : IIndicator
 	{
+		/// <summary>
+		/// 短期移動平均期間
+		/// </summary>
 		public int FastPeriod { get; set; } = 12;
+
+		/// <summary>
+		/// 長期移動平均期間
+		/// </summary>
 		public int SlowPeriod { get; set; } = 26;
+
+		/// <summary>
+		/// シグナル移動平均期間
+		/// </summary>
 		public int SignalPeriod { get; set; } = 9;
 
+		/// <summary>
+		/// 短期用移動平均インジケーター
+		/// </summary>
 		private MovingAverageIndicator FastMaIndicator = null;
+
+		/// <summary>
+		/// 長期用移動平均インジケーター
+		/// </summary>
 		private MovingAverageIndicator SlowMaIndicator = null;
 
+		/// <summary>
+		/// MACDのキュー
+		/// </summary>
 		private Queue<double> MacdQueue = null;
+
+		/// <summary>
+		/// 前回のMACDシグナル
+		/// </summary>
 		private double? PreviousSignal = null;
 
+		/// <summary>
+		/// MacdIndicatorの新しいインスタンスを初期化します。
+		/// </summary>
 		public MacdIndicator()
 		{
 			FastMaIndicator = new MovingAverageIndicator();
@@ -28,6 +55,11 @@ namespace MagicalNuts.Indicators
 			SlowMaIndicator.MaMethod = MaMethod.Ema;
 		}
 
+		/// <summary>
+		/// 値を取得します。
+		/// </summary>
+		/// <param name="args">インジケーター引数</param>
+		/// <returns>値</returns>
 		public double[] GetData(IndicatorArgs args)
 		{
 			// 必要期間に満たない
