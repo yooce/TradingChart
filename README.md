@@ -6,7 +6,8 @@
 
 # Requirement
 
-.NET Framework 4.6.1
+* .NET Framework 4.6.1
+* MathNet.Numerics
 
 # Basic Usage
 
@@ -32,22 +33,22 @@ TradingChartコントロールを'Form'に配置し、`SetUp`を呼んだ後、`
 ```C#
 // DataTypes.Candle[] candles = ...
 tradingChart1.SetUp();
-tradingChart1.SetDailyCandles(candles, 2, CandleTerm.Dayly);
+tradingChart1.SetDailyCandles(candles, 2, CandlePeriod.Dayly);
 ```
 
 ## ロウソク足の期間変更
 
-`CandleTerm`を設定するだけで、ロウソク足の期間を変更できます。
+`CandlePeriod`を設定するだけで、ロウソク足の期間を変更できます。
 
 ```C#
 // 週足
-tradingChart1.CandleTerm = CandleTerm.Weekly;
+tradingChart1.CandlePeriod = CandlePeriod.Weekly;
 
 // 月足
-tradingChart1.CandleTerm = CandleTerm.Monthly;
+tradingChart1.CandlePeriod = CandlePeriod.Monthly;
 
 // 年足
-tradingChart1.CandleTerm = CandleTerm.Yearly;
+tradingChart1.CandlePeriod = CandlePeriod.Yearly;
 ```
 
 ## 画面あたりの足数の変更
