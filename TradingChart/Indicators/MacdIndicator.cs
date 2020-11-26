@@ -47,6 +47,9 @@ namespace MagicalNuts.Indicators
 			MacdQueue.Enqueue(macd);
 			if (MacdQueue.Count > SignalPeriod) MacdQueue.Dequeue();
 
+			// 必要期間に満たない
+			if (MacdQueue.Count < SignalPeriod) return null;
+
 			// シグナル
 			double signal = MovingAverageIndicator.GetMovingAverage(MacdQueue.ToArray(), MaMethod.Sma, PreviousSignal);
 
