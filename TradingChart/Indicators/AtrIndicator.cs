@@ -24,7 +24,7 @@ namespace MagicalNuts.Indicators
 		/// </summary>
 		/// <param name="args">インジケーター引数</param>
 		/// <returns>値</returns>
-		public double[] GetData(IndicatorArgs args)
+		public double[] GetValues(IndicatorArgs args)
 		{
 			// 必要期間に満たない
 			if (args.Candles.Count < Period + 1) return null;

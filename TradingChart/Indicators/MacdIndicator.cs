@@ -60,7 +60,7 @@ namespace MagicalNuts.Indicators
 		/// </summary>
 		/// <param name="args">インジケーター引数</param>
 		/// <returns>値</returns>
-		public double[] GetData(IndicatorArgs args)
+		public double[] GetValues(IndicatorArgs args)
 		{
 			// 必要期間に満たない
 			if (args.Candles.Count < FastPeriod || args.Candles.Count < SlowPeriod) return null;
@@ -69,8 +69,8 @@ namespace MagicalNuts.Indicators
 			if (MacdQueue == null) MacdQueue = new Queue<double>();
 
 			// 移動平均
-			double fast_ma = FastMaIndicator.GetData(new IndicatorArgs(args.Candles))[0];
-			double slow_ma = SlowMaIndicator.GetData(new IndicatorArgs(args.Candles))[0];
+			double fast_ma = FastMaIndicator.GetValues(new IndicatorArgs(args.Candles))[0];
+			double slow_ma = SlowMaIndicator.GetValues(new IndicatorArgs(args.Candles))[0];
 
 			// MACD
 			double macd = fast_ma - slow_ma;

@@ -11,8 +11,7 @@ namespace MagicalNuts.Plotters
 		/// <summary>
 		/// プロッター名を取得します。
 		/// </summary>
-		/// <returns>プロッター名</returns>
-		string GetName();
+		string Name { get; }
 
 		/// <summary>
 		/// ChartAreaを設定します。
@@ -22,10 +21,9 @@ namespace MagicalNuts.Plotters
 		SubChartArea[] SetChartArea(MainChartArea mainChartArea);
 
 		/// <summary>
-		/// Seriesを取得します。
+		/// Seriesの配列を取得します。
 		/// </summary>
-		/// <returns>Seriesの配列</returns>
-		Series[] GetSeries();
+		Series[] SeriesArray { get; }
 
 		/// <summary>
 		/// データをプロットします。

@@ -10,6 +10,6 @@
 		/// </summary>
 		/// <param name="args">インジケーター引数</param>
 		/// <returns>値</returns>
-		double[] GetData(IndicatorArgs args);
+		double[] GetValues(IndicatorArgs args);
 	}
 }

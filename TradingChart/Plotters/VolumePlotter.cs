@@ -26,11 +26,7 @@ namespace MagicalNuts.Plotters
 		/// <summary>
 		/// プロッター名を取得します。
 		/// </summary>
-		/// <returns>プロッター名</returns>
-		public override string GetName()
-		{
-			return "出来高";
-		}
+		public override string Name { get => "出来高"; }
 
 		/// <summary>
 		/// ChartAreaを設定します。
@@ -44,13 +40,9 @@ namespace MagicalNuts.Plotters
 		}
 
 		/// <summary>
-		/// Seriesを取得します。
+		/// Seriesの配列を取得します。
 		/// </summary>
-		/// <returns>Seriesの配列</returns>
-		public override Series[] GetSeries()
-		{
-			return new Series[] { Series };
-		}
+		public override Series[] SeriesArray { get => new Series[] { Series }; }
 
 		/// <summary>
 		/// データをプロットします。
@@ -67,7 +59,7 @@ namespace MagicalNuts.Plotters
 			for (int x = 0; x < candles.Count; x++)
 			{
 				// 値
-				DataPoint dp = new DataPoint(x, Indicator.GetData(new Indicators.IndicatorArgs(GetCandlesForIndicator(x))));
+				DataPoint dp = new DataPoint(x, Indicator.GetValues(new Indicators.IndicatorArgs(GetCandlesForIndicator(x))));
 
 				// 着色
 				if (candles[x].Close >= candles[x].Open) dp.Color = Color.FromArgb(127, Palette.PriceUpColor);

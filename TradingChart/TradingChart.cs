@@ -197,7 +197,7 @@ namespace MagicalNuts
 			// Series追加
 			foreach (Plotters.IPlotter plotter in Plotters)
 			{
-				foreach (Series series in plotter.GetSeries())
+				foreach (Series series in plotter.SeriesArray)
 				{
 					Series.Add(series);
 				}

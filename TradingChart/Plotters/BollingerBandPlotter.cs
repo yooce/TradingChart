@@ -45,20 +45,12 @@ namespace MagicalNuts.Plotters
 		/// <summary>
 		/// プロッター名を取得します。
 		/// </summary>
-		/// <returns>プロッター名</returns>
-		public override string GetName()
-		{
-			return "ボリンジャーバンド";
-		}
+		public override string Name { get => "ボリンジャーバンド"; }
 
 		/// <summary>
-		/// Seriesを取得します。
+		/// Seriesの配列を取得します。
 		/// </summary>
-		/// <returns>Seriesの配列</returns>
-		public override Series[] GetSeries()
-		{
-			return Series;
-		}
+		public override Series[] SeriesArray { get => Series; }
 
 		/// <summary>
 		/// データをプロットします。
@@ -77,7 +69,7 @@ namespace MagicalNuts.Plotters
 			// プロット
 			for (int x = 0; x < candles.Count; x++)
 			{
-				double[] data = Indicator.GetData(new Indicators.IndicatorArgs(GetCandlesForIndicator(x)));
+				double[] data = Indicator.GetValues(new Indicators.IndicatorArgs(GetCandlesForIndicator(x)));
 				if (data == null) continue;
 
 				Series[0].Points.Add(new DataPoint(x, data[0]));

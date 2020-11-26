@@ -57,7 +57,7 @@
     <Compile Include="Plotters\BollingerBandPlotter.cs" />
     <Compile Include="Plotters\CandlePlotter.cs" />
     <Compile Include="Plotters\IndicatorPlotter.cs" />
-    <Compile Include="Plotters\IPlotters.cs" />
+    <Compile Include="Plotters\IPlotter.cs" />
     <Compile Include="Plotters\MacdPlotter.cs" />
     <Compile Include="Plotters\MovingAveragePlotter.cs" />
     <Compile Include="Plotters\VolumePlotter.cs" />

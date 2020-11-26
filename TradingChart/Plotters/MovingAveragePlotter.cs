@@ -28,11 +28,7 @@ namespace MagicalNuts.Plotters
 		/// <summary>
 		/// プロッター名を取得します。
 		/// </summary>
-		/// <returns>プロッター名</returns>
-		public override string GetName()
-		{
-			return "移動平均";
-		}
+		public override string Name { get => "移動平均"; }
 
 		/// <summary>
 		/// ChartAreaを設定します。
@@ -46,13 +42,9 @@ namespace MagicalNuts.Plotters
 		}
 
 		/// <summary>
-		/// Seriesを取得します。
+		/// Seriesの配列を取得します。
 		/// </summary>
-		/// <returns>Seriesの配列</returns>
-		public override Series[] GetSeries()
-		{
-			return new Series[] { Series };
-		}
+		public override Series[] SeriesArray { get => new Series[] { Series }; }
 
 		/// <summary>
 		/// データをプロットします。
@@ -68,7 +60,7 @@ namespace MagicalNuts.Plotters
 			// プロット
 			for (int x = 0; x < candles.Count; x++)
 			{
-				double[] data = Indicator.GetData(new Indicators.IndicatorArgs(GetCandlesForIndicator(x)));
+				double[] data = Indicator.GetValues(new Indicators.IndicatorArgs(GetCandlesForIndicator(x)));
 				if (data == null) continue;
 
 				Series.Points.Add(new DataPoint(x, data));

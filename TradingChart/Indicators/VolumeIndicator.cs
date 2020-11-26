@@ -10,7 +10,7 @@
 		/// </summary>
 		/// <param name="args">インジケーター引数</param>
 		/// <returns>値</returns>
-		public double[] GetData(IndicatorArgs args)
+		public double[] GetValues(IndicatorArgs args)
 		{
 			return new double[] { args.Candles[0].Volume };
 		}

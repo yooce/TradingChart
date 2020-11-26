@@ -30,8 +30,7 @@ namespace MagicalNuts.Plotters
 		/// <summary>
 		/// プロッター名を取得します。
 		/// </summary>
-		/// <returns>プロッター名</returns>
-		public abstract string GetName();
+		public abstract string Name { get; }
 
 		/// <summary>
 		/// ChartAreaを設定します。
@@ -41,10 +40,9 @@ namespace MagicalNuts.Plotters
 		public abstract SubChartArea[] SetChartArea(MainChartArea mainChartArea);
 
 		/// <summary>
-		/// Seriesを取得します。
+		/// Seriesの配列を取得します。
 		/// </summary>
-		/// <returns>Seriesの配列</returns>
-		public abstract Series[] GetSeries();
+		public abstract Series[] SeriesArray { get; }
 
 		/// <summary>
 		/// データをプロットします。

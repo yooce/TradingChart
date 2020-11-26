@@ -37,13 +37,13 @@ namespace MagicalNuts.Indicators
 		/// </summary>
 		/// <param name="args">インジケーター引数</param>
 		/// <returns>値</returns>
-		public double[] GetData(IndicatorArgs args)
+		public double[] GetValues(IndicatorArgs args)
 		{
 			// 必要期間に満たない
 			if (args.Candles.Count < Period) return null;
 
 			// 移動平均
-			double ma = MovingAverageIndicator.GetData(new IndicatorArgs(args.Candles))[0];
+			double ma = MovingAverageIndicator.GetValues(new IndicatorArgs(args.Candles))[0];
 
 			// 標準偏差
 			double dev = args.Candles.GetRange(0, Period).Select(candle => (double)candle.Close).PopulationStandardDeviation();

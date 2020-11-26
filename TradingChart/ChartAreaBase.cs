@@ -120,7 +120,7 @@ namespace MagicalNuts
 			List<double> values = new List<double>();
 			foreach (Plotters.IPlotter plotter in plotters)
 			{
-				foreach (Series series in plotter.GetSeries())
+				foreach (Series series in plotter.SeriesArray)
 				{
 					// 自ChartAreaでなければスキップ
 					if (series.ChartArea != Name) continue;
