@@ -15,6 +15,9 @@ namespace MagicalNuts.Indicators
 		private MovingAverageIndicator FastMaIndicator = null;
 		private MovingAverageIndicator SlowMaIndicator = null;
 
+		private Queue<double> MacdQueue = null;
+		private double? PreviousSignal = null;
+
 		public MacdIndicator()
 		{
 			FastMaIndicator = new MovingAverageIndicator();
@@ -27,16 +30,30 @@ namespace MagicalNuts.Indicators
 
 		public double[] GetData(IndicatorArgs args)
 		{
-			if (args.Candles.Count < FastPeriod + SignalPeriod || args.Candles.Count < SlowPeriod + SignalPeriod) return null;
+			// 必要期間に満たない
+			if (args.Candles.Count < FastPeriod || args.Candles.Count < SlowPeriod) return null;
 
-			List<double> macds = new List<double>();
-			for (int i = 0; i < SignalPeriod; i++)
-			{
-				macds.Add(FastMaIndicator.GetData(new IndicatorArgs(args.Candles.GetRange(i, args.Candles.Count - i)))[0]
-					- SlowMaIndicator.GetData(new IndicatorArgs(args.Candles.GetRange(i, args.Candles.Count - i)))[0]);
-			}
+			// キュー作成
+			if (MacdQueue == null) MacdQueue = new Queue<double>();
 
-			return new double[] { macds[0], MovingAverageIndicator.GetMovingAverage(macds.ToArray(), MaMethod.Ema, macds.Last() ) };
+			// 移動平均
+			double fast_ma = FastMaIndicator.GetData(new IndicatorArgs(args.Candles))[0];
+			double slow_ma = SlowMaIndicator.GetData(new IndicatorArgs(args.Candles))[0];
+
+			// MACD
+			double macd = fast_ma - slow_ma;
+
+			// キューに格納
+			MacdQueue.Enqueue(macd);
+			if (MacdQueue.Count > SignalPeriod) MacdQueue.Dequeue();
+
+			// シグナル
+			double signal = MovingAverageIndicator.GetMovingAverage(MacdQueue.ToArray(), MaMethod.Sma, PreviousSignal);
+
+			// 次回のために覚えておく
+			PreviousSignal = signal;
+
+			return new double[] { macd, signal };
 		}
 	}
 }

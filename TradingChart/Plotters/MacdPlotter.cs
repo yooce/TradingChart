@@ -57,6 +57,7 @@ namespace MagicalNuts.Plotters
 			}
 
 			// プロット
+			DataPoint prevDp = null;
 			for (int x = 0; x < candles.Count; x++)
 			{
 				double[] data = Indicator.GetData(new Indicators.IndicatorArgs(GetCandlesForIndicator(x)));
@@ -65,10 +66,21 @@ namespace MagicalNuts.Plotters
 				Series[0].Points.Add(new DataPoint(x, data[0]));
 				Series[1].Points.Add(new DataPoint(x, data[1]));
 
-				DataPoint dp = new DataPoint(x, data[0] - data[1]);
-				if (data[0] - data[1] >= 0) dp.Color = Palette.PriceUpColor;
-				else dp.Color = Palette.PriceDownColor;
+				double y = data[0] - data[1];
+				DataPoint dp = new DataPoint(x, y);
+				if (y >= 0)
+				{
+					if (prevDp != null && prevDp.YValues[0] > y) dp.Color = Color.FromArgb(169, 224, 219);
+					else dp.Color = Palette.PriceUpColor;
+				}
+				else
+				{
+					if (prevDp != null && prevDp.YValues[0] < y) dp.Color = Color.FromArgb(255, 204, 210);
+					else dp.Color = Palette.PriceDownColor;
+				}
 				Series[2].Points.Add(dp);
+
+				prevDp = dp;
 			}
 		}
 

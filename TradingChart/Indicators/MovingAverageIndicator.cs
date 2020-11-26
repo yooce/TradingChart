@@ -17,20 +17,23 @@ namespace MagicalNuts.Indicators
 		public int Period { get; set; } = 25;
 		public MaMethod MaMethod { get; set; } = MaMethod.Sma;
 
+		private double? PreviousMa = null;
+
 		public double[] GetData(IndicatorArgs args)
 		{
 			// 必要期間に満たない
 			if (args.Candles.Count < Period) return null;
 
-			// 初日の移動平均取得
-			int fast_period = Period;
-			if (args.Candles.Count - (Period - 1) < Period) fast_period = args.Candles.Count - (Period - 1);
-			double fast_ma = GetMovingAverage(args.Candles.GetRange(Period - 1, fast_period).Select(candle => (double)candle.Close).ToArray(), MaMethod.Sma, null);
+			// 移動平均
+			double ma = GetMovingAverage(args.Candles.GetRange(0, Period).Select(candle => (double)candle.Close).ToArray(), MaMethod, PreviousMa);
 
-			return new double[] { GetMovingAverage(args.Candles.GetRange(0, Period).Select(candle => (double)candle.Close).ToArray(), MaMethod, fast_ma) };
+			// 次回のために覚えておく
+			PreviousMa = ma;
+
+			return new double[] { ma };
 		}
 
-		public static double GetMovingAverage(double[] data, MaMethod method, double? fast_ma)
+		public static double GetMovingAverage(double[] data, MaMethod method, double? prev_ma)
 		{
 			switch (method)
 			{
@@ -41,17 +44,15 @@ namespace MagicalNuts.Indicators
 				case MaMethod.Ema:
 				case MaMethod.Smma:
 					{
+						// 係数
 						double a = 0.0;
 						if (method == MaMethod.Ema) a = 2.0 / (data.Length + 1);
 						else a = 1.0 / data.Length;
-						// double ma = data.Average();
-						// double ma = data.Last();
-						double ma = fast_ma.Value;
-						for (int i = data.Length - 2; i >= 0; i--)
-						{
-							ma = a * data[i] + (1.0 - a) * ma;
-						}
-						return ma;
+
+						// 初回の移動平均
+						if (prev_ma == null) prev_ma = data.Last();
+
+						return a * data[0] + (1.0 - a) * prev_ma.Value;
 					}
 				case MaMethod.Lwma:
 					{

@@ -22,6 +22,7 @@ namespace MagicalNuts.Indicators
 
 		public double[] GetData(IndicatorArgs args)
 		{
+			// 必要期間に満たない
 			if (args.Candles.Count < Period) return null;
 
 			// 移動平均

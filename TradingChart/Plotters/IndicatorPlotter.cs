@@ -10,14 +10,14 @@ namespace MagicalNuts.Plotters
 	public abstract class IndicatorPlotter<T> : IPlotter where T : Indicators.IIndicator, new()
 	{
 		/// <summary>
+		/// インジケーター
+		/// </summary>
+		public T Indicator { get; private set; }
+
+		/// <summary>
 		/// 逆順ロウソク足のリスト
 		/// </summary>
 		private List<DataTypes.Candle> ReversedCandles = null;
-
-		/// <summary>
-		/// インジケーター
-		/// </summary>
-		protected T Indicator;
 
 		/// <summary>
 		/// IndicatorPlotterの新しいインスタンスを初期化します。
