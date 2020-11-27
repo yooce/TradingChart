@@ -1,9 +1,61 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MagicalNuts.Plotters
 {
+	public class MacdPlotterProperties : Indicators.MacdIndicatorProperties
+	{
+		/// <summary>
+		/// MACDの色を設定または取得します。
+		/// </summary>
+		[Category("MACD")]
+		[Description("MACDの色を設定します。")]
+		[DefaultValue(typeof(Color), "0, 143, 250")]
+		public Color MacdColor { get; set; } = Color.FromArgb(0, 143, 250);
+
+		/// <summary>
+		/// シグナルの色を設定または取得します。
+		/// </summary>
+		[Category("MACD")]
+		[Description("シグナルの色を設定します。")]
+		[DefaultValue(typeof(Color), "255, 103, 36")]
+		public Color SignalColor { get; set; } = Color.FromArgb(255, 103, 36);
+
+		/// <summary>
+		/// オシレーターがプラスで増加時の色を設定または取得します。
+		/// </summary>
+		[Category("MACD")]
+		[Description("オシレーターがプラスで増加時の色を設定します。")]
+		[DefaultValue(typeof(Color), "0, 167, 154")]
+		public Color PlusUpColor { get; set; } = Palette.PriceUpColor;
+
+		/// <summary>
+		/// オシレーターがプラスで減少時の色を設定または取得します。
+		/// </summary>
+		[Category("MACD")]
+		[Description("オシレーターがプラスで減少時の色を設定します。")]
+		[DefaultValue(typeof(Color), "169, 224, 219")]
+		public Color PlusDownColor { get; set; } = Color.FromArgb(169, 224, 219);
+
+		/// <summary>
+		/// オシレーターがマイナスで増加時の色を設定または取得します。
+		/// </summary>
+		[Category("MACD")]
+		[Description("オシレーターがマイナスで増加時の色を設定します。")]
+		[DefaultValue(typeof(Color), "255, 204, 210")]
+		public Color MinusUpColor { get; set; } = Color.FromArgb(255, 204, 210);
+
+		/// <summary>
+		/// オシレーターがマイナスで減少時の色を設定または取得します。
+		/// </summary>
+		[Category("MACD")]
+		[Description("オシレーターがマイナスで減少時の色を設定します。")]
+		[DefaultValue(typeof(Color), "254, 77, 84")]
+		public Color MinusDownColor { get; set; } = Palette.PriceDownColor;
+	}
+
 	/// <summary>
 	/// MACDのプロッターを表します。
 	/// </summary>
@@ -19,6 +71,7 @@ namespace MagicalNuts.Plotters
 		/// </summary>
 		public MacdPlotter()
 		{
+			Indicator.Properties = new MacdPlotterProperties();
 			Series = new Series[3];
 			for (int i = 0; i < Series.Length; i++)
 			{
@@ -28,23 +81,27 @@ namespace MagicalNuts.Plotters
 				{
 					case 0:
 						Series[i].ChartType = SeriesChartType.Line;
-						Series[i].Color = Color.FromArgb(0, 143, 250);
 						break;
 					case 1:
 						Series[i].ChartType = SeriesChartType.Line;
-						Series[i].Color = Color.FromArgb(255, 103, 36);
 						break;
 					case 2:
 						Series[i].ChartType = SeriesChartType.Column;
 						break;
 				}
 			}
+			ApplyProperties();
 		}
 
 		/// <summary>
 		/// プロッター名を取得します。
 		/// </summary>
 		public override string Name { get => "MACD"; }
+
+		/// <summary>
+		/// プロパティを取得します。
+		/// </summary>
+		public override object Properties => Indicator.Properties;
 
 		/// <summary>
 		/// Seriesの配列を取得します。
@@ -66,7 +123,6 @@ namespace MagicalNuts.Plotters
 			}
 
 			// プロット
-			DataPoint prevDp = null;
 			for (int x = 0; x < candles.Count; x++)
 			{
 				double[] data = Indicator.GetValues(new Indicators.IndicatorArgs(GetCandlesForIndicator(x)));
@@ -79,20 +135,30 @@ namespace MagicalNuts.Plotters
 				Series[1].Points.Add(new DataPoint(x, data[1]));
 
 				// MACDオシレーター
-				double y = data[0] - data[1];
-				DataPoint dp = new DataPoint(x, y);
-				if (y >= 0)
+				Series[2].Points.Add(new DataPoint(x, data[0] - data[1]));
+			}
+
+			// オシレーター色
+			SetOscillatorColors();
+		}
+
+		private void SetOscillatorColors()
+		{
+			MacdPlotterProperties properties = (MacdPlotterProperties)Properties;
+
+			DataPoint prevDp = null;
+			foreach (DataPoint dp in Series[2].Points)
+			{
+				if (dp.YValues[0] >= 0)
 				{
-					if (prevDp != null && prevDp.YValues[0] > y) dp.Color = Color.FromArgb(169, 224, 219);
-					else dp.Color = Palette.PriceUpColor;
+					if (prevDp != null && prevDp.YValues[0] > dp.YValues[0]) dp.Color = properties.PlusDownColor;
+					else dp.Color = properties.PlusUpColor;
 				}
 				else
 				{
-					if (prevDp != null && prevDp.YValues[0] < y) dp.Color = Color.FromArgb(255, 204, 210);
-					else dp.Color = Palette.PriceDownColor;
+					if (prevDp != null && prevDp.YValues[0] < dp.YValues[0]) dp.Color = properties.MinusUpColor;
+					else dp.Color = properties.MinusDownColor;
 				}
-				Series[2].Points.Add(dp);
-
 				prevDp = dp;
 			}
 		}
@@ -110,6 +176,17 @@ namespace MagicalNuts.Plotters
 				series.ChartArea = subChartArea.Name;
 			}
 			return new SubChartArea[] { subChartArea };
+		}
+
+		/// <summary>
+		/// プロパティを適用します。
+		/// </summary>
+		public override void ApplyProperties()
+		{
+			MacdPlotterProperties properties = (MacdPlotterProperties)Properties;
+			Series[0].Color = properties.MacdColor;
+			Series[1].Color = properties.SignalColor;
+			SetOscillatorColors();
 		}
 	}
 }
