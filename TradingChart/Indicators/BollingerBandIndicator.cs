@@ -34,9 +34,9 @@ namespace MagicalNuts.Indicators
 		public BollingerBandIndicatorProperties Properties { get; set; }
 
 		/// <summary>
-		/// 移動平均インジケーター
+		/// 移動平均インジケーターを設定または取得します。
 		/// </summary>
-		private MovingAverageIndicator MovingAverageIndicator = null;
+		public MovingAverageIndicator MovingAverageIndicator { get; set; }
 
 		/// <summary>
 		/// BollingerBandIndicatorクラスの新しいインスタンスを初期化します。

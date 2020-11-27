@@ -199,10 +199,21 @@ namespace MagicalNuts.Plotters
 		public override void ApplyProperties()
 		{
 			MacdPlotterProperties properties = (MacdPlotterProperties)Properties;
+
+			// 移動平均
+			Indicator.FastMaIndicator.Properties.Period = properties.FastPeriod;
+			Indicator.SlowMaIndicator.Properties.Period = properties.SlowPeriod;
+
+			// 色
 			Series[0].Color = properties.MacdColor;
 			Series[1].Color = properties.SignalColor;
 			SetOscillatorColors();
+
+			// 桁数
 			if (ChartArea != null) ChartArea.AxisY2.LabelStyle.Format = CandleUtility.GetPriceFormat(properties.Digits);
+
+			// 再初期化
+			Indicator.Reset();
 		}
 	}
 }

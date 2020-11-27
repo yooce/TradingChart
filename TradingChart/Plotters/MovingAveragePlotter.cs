@@ -94,6 +94,7 @@ namespace MagicalNuts.Plotters
 		public override void ApplyProperties()
 		{
 			Series.Color = ((MovingAveragePlotterProperties)Indicator.Properties).Color;
+			Indicator.Reset();
 		}
 	}
 }

@@ -143,6 +143,9 @@ namespace MagicalNuts.Plotters
 		{
 			BollingerBandPlotterProperties properties = (BollingerBandPlotterProperties)Properties;
 
+			// 移動平均
+			Indicator.MovingAverageIndicator.Properties.Period = properties.Period;
+
 			// 色
 			for (int i = 0; i < Series.Length; i++)
 			{

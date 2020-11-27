@@ -42,8 +42,8 @@ namespace MagicalNuts.Indicators
 		/// </summary>
 		[Category("MACD")]
 		[Description("シグナルの移動平均計算方法を設定します。")]
-		[DefaultValue(MaMethod.Ema)]
-		public MaMethod SignalMaMethod { get; set; } = MaMethod.Ema;
+		[DefaultValue(MaMethod.Sma)]
+		public MaMethod SignalMaMethod { get; set; } = MaMethod.Sma;
 	}
 
 	/// <summary>
@@ -57,14 +57,14 @@ namespace MagicalNuts.Indicators
 		public MacdIndicatorProperties Properties { get; set; }
 
 		/// <summary>
-		/// 短期用移動平均インジケーター
+		/// 短期用移動平均インジケーターを設定または取得します。
 		/// </summary>
-		private MovingAverageIndicator FastMaIndicator = null;
+		public MovingAverageIndicator FastMaIndicator { get; set; }
 
 		/// <summary>
-		/// 長期用移動平均インジケーター
+		/// 長期用移動平均インジケーターを設定または取得します。
 		/// </summary>
-		private MovingAverageIndicator SlowMaIndicator = null;
+		public MovingAverageIndicator SlowMaIndicator { get; set; }
 
 		/// <summary>
 		/// MACDのキュー
@@ -88,6 +88,15 @@ namespace MagicalNuts.Indicators
 			SlowMaIndicator = new MovingAverageIndicator();
 			SlowMaIndicator.Properties.Period = Properties.SlowPeriod;
 			SlowMaIndicator.Properties.MaMethod = Properties.MacdMaMethod;
+		}
+
+		/// <summary>
+		/// 再初期化します。
+		/// </summary>
+		public void Reset()
+		{
+			MacdQueue = null;
+			PreviousSignal = null;
 		}
 
 		/// <summary>

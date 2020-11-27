@@ -60,6 +60,14 @@ namespace MagicalNuts.Indicators
 		}
 
 		/// <summary>
+		/// 再初期化します。
+		/// </summary>
+		public void Reset()
+		{
+			PreviousMa = null;
+		}
+
+		/// <summary>
 		/// 値を取得します。
 		/// </summary>
 		/// <param name="args">インジケーター引数</param>
