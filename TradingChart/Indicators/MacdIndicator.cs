@@ -48,11 +48,11 @@ namespace MagicalNuts.Indicators
 		public MacdIndicator()
 		{
 			FastMaIndicator = new MovingAverageIndicator();
-			FastMaIndicator.Period = FastPeriod;
-			FastMaIndicator.MaMethod = MaMethod.Ema;
+			FastMaIndicator.Properties.Period = FastPeriod;
+			FastMaIndicator.Properties.MaMethod = MaMethod.Ema;
 			SlowMaIndicator = new MovingAverageIndicator();
-			SlowMaIndicator.Period = SlowPeriod;
-			SlowMaIndicator.MaMethod = MaMethod.Ema;
+			SlowMaIndicator.Properties.Period = SlowPeriod;
+			SlowMaIndicator.Properties.MaMethod = MaMethod.Ema;
 		}
 
 		/// <summary>

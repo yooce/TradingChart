@@ -60,6 +60,7 @@
     <Compile Include="Plotters\IPlotter.cs" />
     <Compile Include="Plotters\MacdPlotter.cs" />
     <Compile Include="Plotters\MovingAveragePlotter.cs" />
+    <Compile Include="Plotters\PlotterManager.cs" />
     <Compile Include="Plotters\VolumePlotter.cs" />
     <Compile Include="PriceBoard.cs">
       <SubType>UserControl</SubType>

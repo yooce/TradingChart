@@ -14,6 +14,11 @@ namespace MagicalNuts.Plotters
 		string Name { get; }
 
 		/// <summary>
+		/// プロパティを取得します。
+		/// </summary>
+		object Properties { get; }
+
+		/// <summary>
 		/// ChartAreaを設定します。
 		/// </summary>
 		/// <param name="mainChartArea">主ChartArea</param>
@@ -30,5 +35,10 @@ namespace MagicalNuts.Plotters
 		/// </summary>
 		/// <param name="candles">ロウソク足のリスト</param>
 		void Plot(List<DataTypes.Candle> candles);
+
+		/// <summary>
+		/// プロパティを適用します。
+		/// </summary>
+		void ApplyProperties();
 	}
 }

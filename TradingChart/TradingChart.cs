@@ -121,7 +121,7 @@ namespace MagicalNuts
 			MainChartArea.SetUp(this);
 
 			// デフォルトプロッター
-			AddPlotter(new Plotters.CandleProtter());
+			AddPlotter(new Plotters.CandlePlotter());
 			AddPlotter(new Plotters.VolumePlotter());
 		}
 
@@ -310,6 +310,22 @@ namespace MagicalNuts
 
 			// 追加
 			Plotters.Add(plotter);
+
+			// ロウソク足設定済みの場合
+			if (Candles != null)
+			{
+				// プロット
+				plotter.Plot(Candles);
+
+				// Series追加
+				foreach (Series series in plotter.SeriesArray)
+				{
+					Series.Add(series);
+				}
+
+				// Y軸設定更新
+				UpdateYSettings();
+			}
 		}
 
 		/// <summary>

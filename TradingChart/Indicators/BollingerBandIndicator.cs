@@ -29,7 +29,7 @@ namespace MagicalNuts.Indicators
 		public BollingerBandIndicator()
 		{
 			MovingAverageIndicator = new MovingAverageIndicator();
-			MovingAverageIndicator.Period = Period;
+			MovingAverageIndicator.Properties.Period = Period;
 		}
 
 		/// <summary>

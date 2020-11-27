@@ -6,7 +6,7 @@ namespace MagicalNuts.Plotters
 	/// <summary>
 	/// ロウソク足プロッターを表します。
 	/// </summary>
-	public class CandleProtter : IndicatorPlotter<Indicators.CandleIndicator>
+	public class CandlePlotter : IndicatorPlotter<Indicators.CandleIndicator>
 	{
 		/// <summary>
 		/// Series
@@ -16,7 +16,7 @@ namespace MagicalNuts.Plotters
 		/// <summary>
 		/// CandleProtterの新しいインスタンスを初期化します。
 		/// </summary>
-		public CandleProtter() : base()
+		public CandlePlotter() : base()
 		{
 			Series = new Series();
 			Series.ChartType = SeriesChartType.Candlestick;

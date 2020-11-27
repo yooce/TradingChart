@@ -33,6 +33,11 @@ namespace MagicalNuts.Plotters
 		public abstract string Name { get; }
 
 		/// <summary>
+		/// プロパティを取得します。
+		/// </summary>
+		public virtual object Properties { get => null; }
+
+		/// <summary>
 		/// ChartAreaを設定します。
 		/// </summary>
 		/// <param name="mainChartArea">主ChartArea</param>
@@ -64,5 +69,10 @@ namespace MagicalNuts.Plotters
 		{
 			return ReversedCandles.GetRange(ReversedCandles.Count - x - 1, x + 1);
 		}
+
+		/// <summary>
+		/// プロパティを適用します。
+		/// </summary>
+		public virtual void ApplyProperties() { }
 	}
 }

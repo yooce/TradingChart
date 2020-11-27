@@ -1,9 +1,24 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MagicalNuts.Plotters
 {
+	/// <summary>
+	/// 移動平均プロッターのプロパティを表します。
+	/// </summary>
+	public class MovingAveragePlotterProperties : Indicators.MovingAverageIndicatorProperties
+	{
+		/// <summary>
+		/// 移動平均線の色
+		/// </summary>
+		[Category("移動平均")]
+		[Description("移動平均線の色を設定します。")]
+		[DefaultValue(typeof(Color), "144, 30, 38")]
+		public Color Color { get; set; } = Color.FromArgb(144, 30, 38);
+	}
+
 	/// <summary>
 	/// 移動平均のプロッターを表します。
 	/// </summary>
@@ -19,16 +34,22 @@ namespace MagicalNuts.Plotters
 		/// </summary>
 		public MovingAveragePlotter()
 		{
+			Indicator.Properties = new MovingAveragePlotterProperties();
 			Series = new Series();
 			Series.ChartType = SeriesChartType.Line;
 			Series.YAxisType = AxisType.Secondary;
-			Series.Color = Color.FromArgb(144, 30, 38);
+			ApplyProperties();
 		}
 
 		/// <summary>
 		/// プロッター名を取得します。
 		/// </summary>
 		public override string Name { get => "移動平均"; }
+
+		/// <summary>
+		/// プロパティを取得します。
+		/// </summary>
+		public override object Properties { get => Indicator.Properties; }
 
 		/// <summary>
 		/// ChartAreaを設定します。
@@ -65,6 +86,14 @@ namespace MagicalNuts.Plotters
 
 				Series.Points.Add(new DataPoint(x, data));
 			}
+		}
+
+		/// <summary>
+		/// プロパティを適用します。
+		/// </summary>
+		public override void ApplyProperties()
+		{
+			Series.Color = ((MovingAveragePlotterProperties)Indicator.Properties).Color;
 		}
 	}
 }

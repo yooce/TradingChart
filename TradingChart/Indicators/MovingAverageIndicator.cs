@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.ComponentModel;
+using System.Linq;
 
 namespace MagicalNuts.Indicators
 {
@@ -14,24 +15,49 @@ namespace MagicalNuts.Indicators
 	}
 
 	/// <summary>
-	/// 移動平均インジケーターを表します。
+	/// 移動平均インジケーターのプロパティを表します。
 	/// </summary>
-	public class MovingAverageIndicator : IIndicator
+	public class MovingAverageIndicatorProperties
 	{
 		/// <summary>
 		/// 期間
 		/// </summary>
+		[Category("移動平均")]
+		[Description("移動平均の対象期間を設定します。")]
+		[DefaultValue(25)]
 		public int Period { get; set; } = 25;
 
 		/// <summary>
 		/// 移動平均の計算方法
 		/// </summary>
+		[Category("移動平均")]
+		[Description("移動平均の計算方法を設定します。")]
+		[DefaultValue(MaMethod.Sma)]
 		public MaMethod MaMethod { get; set; } = MaMethod.Sma;
+	}
+
+	/// <summary>
+	/// 移動平均インジケーターを表します。
+	/// </summary>
+	public class MovingAverageIndicator : IIndicator
+	{
+		/// <summary>
+		/// 移動平均インジケーターのプロパティを取得します。
+		/// </summary>
+		public MovingAverageIndicatorProperties Properties { get; set; }
 
 		/// <summary>
 		/// 前回の移動平均
 		/// </summary>
 		private double? PreviousMa = null;
+
+		/// <summary>
+		/// MovingAverageIndicatorの新しいインスタンスを初期化します。
+		/// </summary>
+		public MovingAverageIndicator()
+		{
+			Properties = new MovingAverageIndicatorProperties();
+		}
 
 		/// <summary>
 		/// 値を取得します。
@@ -41,10 +67,11 @@ namespace MagicalNuts.Indicators
 		public double[] GetValues(IndicatorArgs args)
 		{
 			// 必要期間に満たない
-			if (args.Candles.Count < Period) return null;
+			if (args.Candles.Count < Properties.Period) return null;
 
 			// 移動平均
-			double ma = GetMovingAverage(args.Candles.GetRange(0, Period).Select(candle => (double)candle.Close).ToArray(), MaMethod, PreviousMa);
+			double ma = GetMovingAverage(args.Candles.GetRange(0
+				, Properties.Period).Select(candle => (double)candle.Close).ToArray(), Properties.MaMethod, PreviousMa);
 
 			// 次回のために覚えておく
 			PreviousMa = ma;
