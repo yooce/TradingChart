@@ -11,10 +11,10 @@ namespace MagicalNuts.Plotters
 	public class MovingAveragePlotterProperties : Indicators.MovingAverageIndicatorProperties
 	{
 		/// <summary>
-		/// 移動平均線の色
+		/// 色を設定または取得します。
 		/// </summary>
 		[Category("移動平均")]
-		[Description("移動平均線の色を設定します。")]
+		[Description("色を設定します。")]
 		[DefaultValue(typeof(Color), "144, 30, 38")]
 		public Color Color { get; set; } = Color.FromArgb(144, 30, 38);
 	}

@@ -66,7 +66,7 @@ namespace MagicalNuts
 		private List<Plotters.IPlotter> Plotters = null;
 
 		/// <summary>
-		/// 分割線のリスト
+		/// 操作中の分割線
 		/// </summary>
 		private HorizontalLineAnnotation MovingSplitter = null;
 
@@ -314,13 +314,39 @@ namespace MagicalNuts
 			// ロウソク足設定済みの場合
 			if (Candles != null)
 			{
+				// 主ChartAreaの位置と大きさを覚えておく（従ChartAreaを操作しているうちに値がリセットされる？）
+				double position = MainChartArea.AxisX.ScaleView.Position;
+				double size = MainChartArea.AxisX.ScaleView.Size;
+
 				// プロット
 				plotter.Plot(Candles);
-
-				// Series追加
+				
 				foreach (Series series in plotter.SeriesArray)
 				{
+					// Series追加
 					Series.Add(series);
+
+					// 従ChartAreaのCustomLabel
+					foreach (SubChartArea subChartArea in SubChartAreas)
+					{
+						// 追加されたプロッターが使う従ChartAreaでなければスキップ
+						if (subChartArea.Name != series.ChartArea) continue;
+
+						DateTime? prevLabelDateTime = null;
+						for (int x = 0; x < Candles.Count; x++)
+						{
+							if (IsNeedCustomLabel(Candles[x], prevLabelDateTime))
+							{
+								subChartArea.AxisX.CustomLabels.Add(
+									new CustomLabel(x - 50.0, x + 50.0, "", 0, LabelMarkStyle.None, GridTickTypes.Gridline));
+								prevLabelDateTime = Candles[x].DateTime;
+							}
+						}
+
+						// 位置
+						subChartArea.AxisX.ScaleView.Position = position;
+						subChartArea.AxisX.ScaleView.Size = size;
+					}
 				}
 
 				// Y軸設定更新
@@ -340,10 +366,35 @@ namespace MagicalNuts
 			// ロウソク足設定済みの場合
 			if (Candles != null)
 			{
-				// Series除去
 				foreach (Series series in plotter.SeriesArray)
 				{
+					// Series除去
 					Series.Remove(series);
+
+					// 使用している従ChartAreaを探す
+					for (int i = SubChartAreas.Count - 1; i >= 0; i--)
+					{
+						if (SubChartAreas[i].Name == series.ChartArea)
+						{
+							if (i == 0)
+							{
+								// 前が主ChartArea
+								MainChartArea.Position.Height = MainChartArea.Position.Height + SubChartAreas[i].Position.Height;
+							}
+							else
+							{
+								// 前が従ChartArea
+								SubChartAreas[i - 1].Position.Height = SubChartAreas[i - 1].Position.Height + SubChartAreas[i].Position.Height;
+							}
+
+							// 分割線除去
+							Annotations.Remove(SubChartAreas[i].Splitter);
+
+							// 従ChartArea除去
+							ChartAreas.Remove(SubChartAreas[i]);
+							SubChartAreas.RemoveAt(i);
+						}
+					}
 				}
 
 				// Y軸設定更新
@@ -385,19 +436,18 @@ namespace MagicalNuts
 
 			// 主ChartAreaとの連動設定
 			subChartArea.AlignWithChartArea = MainChartArea.Name;
-			subChartArea.AlignmentStyle
-				= AreaAlignmentStyles.Position | AreaAlignmentStyles.PlotPosition | AreaAlignmentStyles.Cursor | AreaAlignmentStyles.AxesView;
+			subChartArea.AlignmentStyle = AreaAlignmentStyles.All;
 
 			// 配置
 			if (SubChartAreas.Count == 0)
 			{
-				// 前がMainChartArea
+				// 前が主ChartArea
 				subChartArea.Splitter.Y = 75;
 				MainChartArea.Position.Height = (float)subChartArea.Splitter.Y;
 			}
 			else
 			{
-				// 前がSubChartArea
+				// 前が従ChartArea
 				SubChartArea prevSubChartArea = SubChartAreas.Last();
 				subChartArea.Splitter.Y = prevSubChartArea.Splitter.Y + prevSubChartArea.Position.Height / 2;
 				prevSubChartArea.Position.Height = prevSubChartArea.Position.Height / 2;
@@ -407,8 +457,10 @@ namespace MagicalNuts
 			subChartArea.Position.Width = 100;
 			subChartArea.Position.Height = 100 - (float)subChartArea.Splitter.Y;
 
-			// 追加
+			// 分割線追加
 			Annotations.Add(subChartArea.Splitter);
+
+			// 従ChartArea追加
 			SubChartAreas.Add(subChartArea);
 			ChartAreas.Add(subChartArea);
 		}
@@ -433,7 +485,7 @@ namespace MagicalNuts
 					{
 						if (i == 0)
 						{
-							// 前がMainChartArea
+							// 前が主ChartArea
 							float bottom = SubChartAreas[i].Position.Y + SubChartAreas[i].Position.Height;
 							MainChartArea.Position.Height = (float)MovingSplitter.Y;
 							SubChartAreas[i].Position.Height = (float)(bottom - MovingSplitter.Y);
@@ -441,7 +493,7 @@ namespace MagicalNuts
 						}
 						else
 						{
-							// 前がSubChartArea
+							// 前が従ChartArea
 							float bottom = SubChartAreas[i].Position.Y + SubChartAreas[i].Position.Height;
 							SubChartAreas[i - 1].Position.Height = (float)MovingSplitter.Y - SubChartAreas[i - 1].Position.Y;
 							SubChartAreas[i].Position.Height = (float)(bottom - MovingSplitter.Y);

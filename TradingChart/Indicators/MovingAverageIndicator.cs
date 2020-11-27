@@ -20,18 +20,18 @@ namespace MagicalNuts.Indicators
 	public class MovingAverageIndicatorProperties
 	{
 		/// <summary>
-		/// 期間
+		/// 期間を設定または取得します。
 		/// </summary>
 		[Category("移動平均")]
-		[Description("移動平均の対象期間を設定します。")]
+		[Description("対象期間を設定します。")]
 		[DefaultValue(25)]
 		public int Period { get; set; } = 25;
 
 		/// <summary>
-		/// 移動平均の計算方法
+		/// 計算方法を設定または取得します。
 		/// </summary>
 		[Category("移動平均")]
-		[Description("移動平均の計算方法を設定します。")]
+		[Description("計算方法を設定します。")]
 		[DefaultValue(MaMethod.Sma)]
 		public MaMethod MaMethod { get; set; } = MaMethod.Sma;
 	}
@@ -42,7 +42,7 @@ namespace MagicalNuts.Indicators
 	public class MovingAverageIndicator : IIndicator
 	{
 		/// <summary>
-		/// 移動平均インジケーターのプロパティを取得します。
+		/// 移動平均インジケーターのプロパティを取得または設定します。
 		/// </summary>
 		public MovingAverageIndicatorProperties Properties { get; set; }
 
