@@ -38,9 +38,9 @@ namespace MagicalNuts.Plotters
 		private Series Series = null;
 
 		/// <summary>
-		/// 従ChartArea
+		/// ChartArea
 		/// </summary>
-		private SubChartArea SubChartArea = null;
+		private ChartArea ChartArea = null;
 
 		/// <summary>
 		/// AtrPlotterクラスの新しいインスタンスを初期化します。
@@ -97,10 +97,11 @@ namespace MagicalNuts.Plotters
 		/// <returns>使用する従ChartAreaの配列</returns>
 		public override SubChartArea[] SetChartArea(MainChartArea mainChartArea)
 		{
-			SubChartArea = new SubChartArea();
-			Series.ChartArea = SubChartArea.Name;
+			SubChartArea subChartArea = new SubChartArea();
+			Series.ChartArea = subChartArea.Name;
+			ChartArea = subChartArea;
 			ApplyProperties();
-			return new SubChartArea[] { SubChartArea };
+			return new SubChartArea[] { subChartArea };
 		}
 
 		/// <summary>
@@ -109,8 +110,7 @@ namespace MagicalNuts.Plotters
 		public override void ApplyProperties()
 		{
 			Series.Color = ((AtrPlotterProperties)Properties).Color;
-			if (SubChartArea != null)
-				SubChartArea.AxisY2.LabelStyle.Format = CandleUtility.GetPriceFormat(((AtrPlotterProperties)Properties).Digits);
+			if (ChartArea != null) ChartArea.AxisY2.LabelStyle.Format = CandleUtility.GetPriceFormat(((AtrPlotterProperties)Properties).Digits);
 		}
 	}
 }

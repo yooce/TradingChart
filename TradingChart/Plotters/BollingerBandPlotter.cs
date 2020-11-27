@@ -1,9 +1,48 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MagicalNuts.Plotters
 {
+	/// <summary>
+	/// ボリンジャーバンドプロッターのプロパティを表します。
+	/// </summary>
+	public class BollingerBandPlotterProperties : Indicators.BollingerBandIndicatorProperties
+	{
+		/// <summary>
+		/// 移動平均線の色を取得または設定します。
+		/// </summary>
+		[Category("ボリンジャーバンド")]
+		[Description("移動平均線の色を設定します。")]
+		[DefaultValue(typeof(Color), "144, 30, 38")]
+		public Color MaColor { get; set; } = Color.FromArgb(144, 30, 38);
+
+		/// <summary>
+		/// ボリンジャーバンドの色を取得または設定します。
+		/// </summary>
+		[Category("ボリンジャーバンド")]
+		[Description("ボリンジャーバンドの色を設定します。")]
+		[DefaultValue(typeof(Color), "0, 133, 131")]
+		public Color BandColor { get; set; } = Color.FromArgb(0, 133, 131);
+
+		/// <summary>
+		/// ボリンジャーバンドのアルファ値を取得または設定します。
+		/// </summary>
+		[Category("ボリンジャーバンド")]
+		[Description("ボリンジャーバンドのアルファ値を設定します。")]
+		[DefaultValue(10)]
+		public int BandAlpha { get; set; } = 10;
+
+		/// <summary>
+		/// 高速モードかどうかを取得または設定します。
+		/// </summary>
+		[Category("ボリンジャーバンド")]
+		[Description("高速モードかどうかを設定します。")]
+		[DefaultValue(true)]
+		public bool FastMode { get; set; } = true;
+	}
+
 	/// <summary>
 	/// ボリンジャーバンドのプロッターを表します。
 	/// </summary>
@@ -19,6 +58,7 @@ namespace MagicalNuts.Plotters
 		/// </summary>
 		public BollingerBandPlotter()
 		{
+			Indicator.Properties = new BollingerBandPlotterProperties();
 			Series = new Series[4];
 			for (int i = 0; i < Series.Length; i++)
 			{
@@ -28,29 +68,32 @@ namespace MagicalNuts.Plotters
 				{
 					case 0:
 						Series[i].ChartType = SeriesChartType.Line;
-						Series[i].Color = Color.FromArgb(144, 30, 38);
 						break;
 					case 1:
 						Series[i].ChartType = SeriesChartType.Range;
-						Series[i].Color = Color.FromArgb(10, 0, 133, 131);
 						break;
 					default:
 						Series[i].ChartType = SeriesChartType.Line;
-						Series[i].Color = Color.FromArgb(0, 133, 131);
 						break;
 				}
 			}
+			ApplyProperties();
 		}
 
 		/// <summary>
 		/// プロッター名を取得します。
 		/// </summary>
-		public override string Name { get => "ボリンジャーバンド"; }
+		public override string Name => "ボリンジャーバンド";
+
+		/// <summary>
+		/// プロパティを取得します。
+		/// </summary>
+		public override object Properties => Indicator.Properties;
 
 		/// <summary>
 		/// Seriesの配列を取得します。
 		/// </summary>
-		public override Series[] SeriesArray { get => Series; }
+		public override Series[] SeriesArray => Series;
 
 		/// <summary>
 		/// データをプロットします。
@@ -91,6 +134,34 @@ namespace MagicalNuts.Plotters
 				series.ChartArea = mainChartArea.Name;
 			}
 			return null;
+		}
+
+		/// <summary>
+		/// プロパティを適用します。
+		/// </summary>
+		public override void ApplyProperties()
+		{
+			BollingerBandPlotterProperties properties = (BollingerBandPlotterProperties)Properties;
+
+			// 色
+			for (int i = 0; i < Series.Length; i++)
+			{
+				switch (i)
+				{
+					case 0:
+						Series[0].Color = properties.MaColor;
+						break;
+					case 1:
+						Series[1].Color = Color.FromArgb(properties.BandAlpha, properties.BandColor);
+						break;
+					default:
+						Series[i].Color = properties.BandColor;
+						break;
+				}
+			}
+
+			// 高速モード
+			Series[1].Enabled = !properties.FastMode;
 		}
 	}
 }

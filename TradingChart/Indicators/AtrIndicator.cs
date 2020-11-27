@@ -8,7 +8,7 @@ namespace MagicalNuts.Indicators
 	public class AtrIndicatorProperties
 	{
 		/// <summary>
-		/// 期間を設定または取得します。
+		/// 対象期間を設定または取得します。
 		/// </summary>
 		[Category("ATR")]
 		[Description("対象期間を設定します。")]
