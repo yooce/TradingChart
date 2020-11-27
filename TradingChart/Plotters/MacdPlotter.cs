@@ -8,6 +8,14 @@ namespace MagicalNuts.Plotters
 	public class MacdPlotterProperties : Indicators.MacdIndicatorProperties
 	{
 		/// <summary>
+		/// 小数点以下の桁数を設定または取得します。
+		/// </summary>
+		[Category("MACD")]
+		[Description("小数点以下の桁数を設定します。")]
+		[DefaultValue(2)]
+		public int Digits { get; set; } = 2;
+
+		/// <summary>
 		/// MACDの色を設定または取得します。
 		/// </summary>
 		[Category("MACD")]
@@ -65,6 +73,11 @@ namespace MagicalNuts.Plotters
 		/// Series
 		/// </summary>
 		private Series[] Series = null;
+
+		/// <summary>
+		/// ChartArea
+		/// </summary>
+		private ChartArea ChartArea = null;
 
 		/// <summary>
 		/// MacdPlotterの新しいインスタンスを初期化します。
@@ -175,6 +188,8 @@ namespace MagicalNuts.Plotters
 			{
 				series.ChartArea = subChartArea.Name;
 			}
+			ChartArea = subChartArea;
+			ApplyProperties();
 			return new SubChartArea[] { subChartArea };
 		}
 
@@ -187,6 +202,7 @@ namespace MagicalNuts.Plotters
 			Series[0].Color = properties.MacdColor;
 			Series[1].Color = properties.SignalColor;
 			SetOscillatorColors();
+			if (ChartArea != null) ChartArea.AxisY2.LabelStyle.Format = CandleUtility.GetPriceFormat(properties.Digits);
 		}
 	}
 }
