@@ -28,12 +28,12 @@ namespace MagicalNuts.TradingChartSample
 			tradingChart1.SetUp();
 
 			// 日足設定
-			tradingChart1.SetDailyCandles(candles, 2, CandleTerm.Dayly);
+			tradingChart1.SetDailyCandles(candles, 2, CandlePeriod.Dayly);
 		}
 
 		private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			tradingChart1.CandleTerm = (CandleTerm)comboBox1.SelectedIndex;
+			tradingChart1.CandlePeriod = (CandlePeriod)comboBox1.SelectedIndex;
 		}
 
 		private void numericUpDown1_ValueChanged(object sender, EventArgs e)
