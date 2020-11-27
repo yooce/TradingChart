@@ -6,31 +6,31 @@ using System.Windows.Forms.DataVisualization.Charting;
 namespace MagicalNuts.Plotters
 {
 	/// <summary>
-	/// ATRプロッターのプロパティを表します。
+	/// ATRインジケーターのプロッター用拡張を表します。
 	/// </summary>
-	public class AtrPlotterProperties : Indicators.AtrIndicatorProperties
+	public class AtrIndicatorEx : Indicators.AtrIndicator
 	{
 		/// <summary>
 		/// 小数点以下の桁数を設定または取得します。
 		/// </summary>
-		[Category("ATR")]
+		[Category("プロット")]
+		[DisplayName("小数点以下の桁数")]
 		[Description("小数点以下の桁数を設定します。")]
-		[DefaultValue(2)]
 		public int Digits { get; set; } = 2;
 
 		/// <summary>
 		/// 色を設定または取得します。
 		/// </summary>
-		[Category("ATR")]
+		[Category("プロット")]
+		[DisplayName("色")]
 		[Description("色を設定します。")]
-		[DefaultValue(typeof(Color), "163, 9, 27")]
 		public Color Color { get; set; } = Color.FromArgb(163, 9, 27);
 	}
 
 	/// <summary>
 	/// ATRのプロッターを表します。
 	/// </summary>
-	public class AtrPlotter : IndicatorPlotter<Indicators.AtrIndicator>
+	public class AtrPlotter : IndicatorPlotter<AtrIndicatorEx>
 	{
 		/// <summary>
 		/// Series
@@ -47,7 +47,6 @@ namespace MagicalNuts.Plotters
 		/// </summary>
 		public AtrPlotter()
 		{
-			Indicator.Properties = new AtrPlotterProperties();
 			Series = new Series();
 			Series.ChartType = SeriesChartType.Line;
 			Series.YAxisType = AxisType.Secondary;
@@ -67,7 +66,7 @@ namespace MagicalNuts.Plotters
 		/// <summary>
 		/// プロパティを取得します。
 		/// </summary>
-		public override object Properties => Indicator.Properties;
+		public override object Properties => Indicator;
 
 		/// <summary>
 		/// データをプロットします。
@@ -109,8 +108,9 @@ namespace MagicalNuts.Plotters
 		/// </summary>
 		public override void ApplyProperties()
 		{
-			Series.Color = ((AtrPlotterProperties)Properties).Color;
-			if (ChartArea != null) ChartArea.AxisY2.LabelStyle.Format = CandleUtility.GetPriceFormat(((AtrPlotterProperties)Properties).Digits);
+			Series.Color = ((AtrIndicatorEx)Properties).Color;
+			if (ChartArea != null) ChartArea.AxisY2.LabelStyle.Format = CandleUtility.GetPriceFormat(((AtrIndicatorEx)Properties).Digits);
+			Indicator.Reset();
 		}
 	}
 }

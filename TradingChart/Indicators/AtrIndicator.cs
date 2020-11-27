@@ -5,38 +5,31 @@ using System.Linq;
 
 namespace MagicalNuts.Indicators
 {
-	public class AtrIndicatorProperties
-	{
-		/// <summary>
-		/// 対象期間を設定または取得します。
-		/// </summary>
-		[Category("ATR")]
-		[Description("対象期間を設定します。")]
-		[DefaultValue(14)]
-		public int Period { get; set; } = 14;
-	}
-
 	/// <summary>
 	/// ATRインジケーターを表します。
 	/// </summary>
 	public class AtrIndicator : IIndicator
 	{
 		/// <summary>
-		/// ATRインジケーターのプロパティを取得または設定します。
+		/// 期間を設定または取得します。
 		/// </summary>
-		public AtrIndicatorProperties Properties { get; set; }
+		[Category("ATR")]
+		[DisplayName("期間")]
+		[Description("期間を設定します。")]
+		public int Period { get; set; } = 14;
 
 		/// <summary>
 		/// 前回のATR
 		/// </summary>
+		[Browsable(false)]
 		private double? PreviousAtr = null;
 
 		/// <summary>
-		/// AtrIndicatorの新しいインスタンスを初期化します。
+		/// 再初期化します。
 		/// </summary>
-		public AtrIndicator()
+		public void Reset()
 		{
-			Properties = new AtrIndicatorProperties();
+			PreviousAtr = null;
 		}
 
 		/// <summary>
@@ -47,11 +40,11 @@ namespace MagicalNuts.Indicators
 		public double[] GetValues(IndicatorArgs args)
 		{
 			// 必要期間に満たない
-			if (args.Candles.Count < Properties.Period + 1) return null;
+			if (args.Candles.Count < Period + 1) return null;
 
 			// 真の値幅（TR）
 			List<decimal> trs = new List<decimal>();
-			for (int i = 0; i < Properties.Period; i++)
+			for (int i = 0; i < Period; i++)
 			{
 				trs.Add(new decimal[]
 				{
