@@ -3,77 +3,55 @@ using System.ComponentModel;
 
 namespace MagicalNuts.Indicators
 {
-	public class MacdIndicatorProperties
-	{
-		/// <summary>
-		/// 短期移動平均期間を設定または取得します。
-		/// </summary>
-		[Category("MACD")]
-		[Description("短期移動平均期間を設定します。")]
-		[DefaultValue(12)]
-		public int FastPeriod { get; set; } = 12;
-
-		/// <summary>
-		/// 長期移動平均期間を設定または取得します。
-		/// </summary>
-		[Category("MACD")]
-		[Description("長期移動平均期間を設定します。")]
-		[DefaultValue(26)]
-		public int SlowPeriod { get; set; } = 26;
-
-		/// <summary>
-		/// シグナル移動平均期間を設定または取得します。
-		/// </summary>
-		[Category("MACD")]
-		[Description("シグナル移動平均期間を設定します。")]
-		[DefaultValue(9)]
-		public int SignalPeriod { get; set; } = 9;
-
-		/// <summary>
-		/// MACDの移動平均計算方法を設定または取得します。
-		/// </summary>
-		[Category("MACD")]
-		[Description("MACDの移動平均計算方法を設定します。")]
-		[DefaultValue(MaMethod.Ema)]
-		public MaMethod MacdMaMethod { get; set; } = MaMethod.Ema;
-
-		/// <summary>
-		/// シグナルの移動平均計算方法を設定または取得します。
-		/// </summary>
-		[Category("MACD")]
-		[Description("シグナルの移動平均計算方法を設定します。")]
-		[DefaultValue(MaMethod.Sma)]
-		public MaMethod SignalMaMethod { get; set; } = MaMethod.Sma;
-	}
-
 	/// <summary>
 	/// MACDインジケーターを表します。
 	/// </summary>
 	public class MacdIndicator : IIndicator
 	{
 		/// <summary>
-		/// MACDインジケーターのプロパティを取得または設定します。
+		/// シグナルの移動平均期間を設定または取得します。
 		/// </summary>
-		public MacdIndicatorProperties Properties { get; set; }
+		[Category("MACD")]
+		[DisplayName("シグナルの移動平均期間")]
+		[Description("シグナルの移動平均期間を設定します。")]
+		public int SignalPeriod { get; set; } = 9;
+
+		/// <summary>
+		/// シグナルの移動平均計算方法を設定または取得します。
+		/// </summary>
+		[Category("MACD")]
+		[DisplayName("シグナルの移動平均計算方法")]
+		[Description("シグナルの移動平均計算方法を設定します。")]
+		public MaMethod SignalMaMethod { get; set; } = MaMethod.Sma;
 
 		/// <summary>
 		/// 短期用移動平均インジケーターを設定または取得します。
 		/// </summary>
+		[Category("MACD")]
+		[DisplayName("短期用移動平均")]
+		[Description("短期移動平均を設定します。")]
+		[TypeConverter(typeof(MovingAverageIndicatorConverter))]
 		public MovingAverageIndicator FastMaIndicator { get; set; }
 
 		/// <summary>
 		/// 長期用移動平均インジケーターを設定または取得します。
 		/// </summary>
+		[Category("MACD")]
+		[DisplayName("長期用移動平均")]
+		[Description("長期移動平均を設定します。")]
+		[TypeConverter(typeof(MovingAverageIndicatorConverter))]
 		public MovingAverageIndicator SlowMaIndicator { get; set; }
 
 		/// <summary>
 		/// MACDのキュー
 		/// </summary>
+		[Browsable(false)]
 		private Queue<double> MacdQueue = null;
 
 		/// <summary>
 		/// 前回のMACDシグナル
 		/// </summary>
+		[Browsable(false)]
 		private double? PreviousSignal = null;
 
 		/// <summary>
@@ -81,13 +59,12 @@ namespace MagicalNuts.Indicators
 		/// </summary>
 		public MacdIndicator()
 		{
-			Properties = new MacdIndicatorProperties();
 			FastMaIndicator = new MovingAverageIndicator();
-			FastMaIndicator.Properties.Period = Properties.FastPeriod;
-			FastMaIndicator.Properties.MaMethod = Properties.MacdMaMethod;
+			FastMaIndicator.Period = 12;
+			FastMaIndicator.MaMethod = MaMethod.Ema;
 			SlowMaIndicator = new MovingAverageIndicator();
-			SlowMaIndicator.Properties.Period = Properties.SlowPeriod;
-			SlowMaIndicator.Properties.MaMethod = Properties.MacdMaMethod;
+			SlowMaIndicator.Period = 26;
+			SlowMaIndicator.MaMethod = MaMethod.Ema;
 		}
 
 		/// <summary>
@@ -107,7 +84,7 @@ namespace MagicalNuts.Indicators
 		public double[] GetValues(IndicatorArgs args)
 		{
 			// 必要期間に満たない
-			if (args.Candles.Count < Properties.FastPeriod || args.Candles.Count < Properties.SlowPeriod) return null;
+			if (args.Candles.Count < FastMaIndicator.Period || args.Candles.Count < SlowMaIndicator.Period) return null;
 
 			// キュー作成
 			if (MacdQueue == null) MacdQueue = new Queue<double>();
@@ -121,13 +98,13 @@ namespace MagicalNuts.Indicators
 
 			// キューに格納
 			MacdQueue.Enqueue(macd);
-			if (MacdQueue.Count > Properties.SignalPeriod) MacdQueue.Dequeue();
+			if (MacdQueue.Count > SignalPeriod) MacdQueue.Dequeue();
 
 			// 必要期間に満たない
-			if (MacdQueue.Count < Properties.SignalPeriod) return null;
+			if (MacdQueue.Count < SignalPeriod) return null;
 
 			// シグナル
-			double signal = MovingAverageIndicator.GetMovingAverage(MacdQueue.ToArray(), Properties.SignalMaMethod, PreviousSignal);
+			double signal = MovingAverageIndicator.GetMovingAverage(MacdQueue.ToArray(), SignalMaMethod, PreviousSignal);
 
 			// 次回のために覚えておく
 			PreviousSignal = signal;

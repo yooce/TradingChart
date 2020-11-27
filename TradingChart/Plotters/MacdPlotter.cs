@@ -5,69 +5,72 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MagicalNuts.Plotters
 {
-	public class MacdPlotterProperties : Indicators.MacdIndicatorProperties
+	/// <summary>
+	/// MACDインジケーターのプロッター用拡張を表します。
+	/// </summary>
+	public class MacdIndicatorEx : Indicators.MacdIndicator
 	{
 		/// <summary>
 		/// 小数点以下の桁数を設定または取得します。
 		/// </summary>
-		[Category("MACD")]
+		[Category("プロット")]
+		[DisplayName("小数点以下の桁数")]
 		[Description("小数点以下の桁数を設定します。")]
-		[DefaultValue(2)]
 		public int Digits { get; set; } = 2;
 
 		/// <summary>
 		/// MACDの色を設定または取得します。
 		/// </summary>
-		[Category("MACD")]
+		[Category("プロット")]
+		[DisplayName("MACDの色")]
 		[Description("MACDの色を設定します。")]
-		[DefaultValue(typeof(Color), "0, 143, 250")]
 		public Color MacdColor { get; set; } = Color.FromArgb(0, 143, 250);
 
 		/// <summary>
 		/// シグナルの色を設定または取得します。
 		/// </summary>
-		[Category("MACD")]
+		[Category("プロット")]
+		[DisplayName("シグナルの色")]
 		[Description("シグナルの色を設定します。")]
-		[DefaultValue(typeof(Color), "255, 103, 36")]
 		public Color SignalColor { get; set; } = Color.FromArgb(255, 103, 36);
 
 		/// <summary>
 		/// オシレーターがプラスで増加時の色を設定または取得します。
 		/// </summary>
-		[Category("MACD")]
+		[Category("プロット")]
+		[DisplayName("オシレーターがプラスで増加時の色")]
 		[Description("オシレーターがプラスで増加時の色を設定します。")]
-		[DefaultValue(typeof(Color), "0, 167, 154")]
 		public Color PlusUpColor { get; set; } = Palette.PriceUpColor;
 
 		/// <summary>
 		/// オシレーターがプラスで減少時の色を設定または取得します。
 		/// </summary>
-		[Category("MACD")]
+		[Category("プロット")]
+		[DisplayName("オシレーターがプラスで減少時の色")]
 		[Description("オシレーターがプラスで減少時の色を設定します。")]
-		[DefaultValue(typeof(Color), "169, 224, 219")]
 		public Color PlusDownColor { get; set; } = Color.FromArgb(169, 224, 219);
 
 		/// <summary>
 		/// オシレーターがマイナスで増加時の色を設定または取得します。
 		/// </summary>
-		[Category("MACD")]
+		[Category("プロット")]
+		[DisplayName("オシレーターがマイナスで増加時の色")]
 		[Description("オシレーターがマイナスで増加時の色を設定します。")]
-		[DefaultValue(typeof(Color), "255, 204, 210")]
 		public Color MinusUpColor { get; set; } = Color.FromArgb(255, 204, 210);
 
 		/// <summary>
 		/// オシレーターがマイナスで減少時の色を設定または取得します。
 		/// </summary>
-		[Category("MACD")]
+		[Category("プロット")]
+		[DisplayName("オシレーターがマイナスで減少時の色")]
 		[Description("オシレーターがマイナスで減少時の色を設定します。")]
-		[DefaultValue(typeof(Color), "254, 77, 84")]
 		public Color MinusDownColor { get; set; } = Palette.PriceDownColor;
 	}
 
 	/// <summary>
 	/// MACDのプロッターを表します。
 	/// </summary>
-	public class MacdPlotter : IndicatorPlotter<Indicators.MacdIndicator>
+	public class MacdPlotter : IndicatorPlotter<MacdIndicatorEx>
 	{
 		/// <summary>
 		/// Series
@@ -84,7 +87,6 @@ namespace MagicalNuts.Plotters
 		/// </summary>
 		public MacdPlotter()
 		{
-			Indicator.Properties = new MacdPlotterProperties();
 			Series = new Series[3];
 			for (int i = 0; i < Series.Length; i++)
 			{
@@ -109,17 +111,17 @@ namespace MagicalNuts.Plotters
 		/// <summary>
 		/// プロッター名を取得します。
 		/// </summary>
-		public override string Name { get => "MACD"; }
+		public override string Name => "MACD";
 
 		/// <summary>
 		/// プロパティを取得します。
 		/// </summary>
-		public override object Properties => Indicator.Properties;
+		public override object Properties => Indicator;
 
 		/// <summary>
 		/// Seriesの配列を取得します。
 		/// </summary>
-		public override Series[] SeriesArray { get => Series; }
+		public override Series[] SeriesArray => Series;
 
 		/// <summary>
 		/// データをプロットします。
@@ -157,7 +159,7 @@ namespace MagicalNuts.Plotters
 
 		private void SetOscillatorColors()
 		{
-			MacdPlotterProperties properties = (MacdPlotterProperties)Properties;
+			MacdIndicatorEx properties = (MacdIndicatorEx)Properties;
 
 			DataPoint prevDp = null;
 			foreach (DataPoint dp in Series[2].Points)
@@ -198,11 +200,11 @@ namespace MagicalNuts.Plotters
 		/// </summary>
 		public override void ApplyProperties()
 		{
-			MacdPlotterProperties properties = (MacdPlotterProperties)Properties;
+			MacdIndicatorEx properties = (MacdIndicatorEx)Properties;
 
 			// 移動平均
-			Indicator.FastMaIndicator.Properties.Period = properties.FastPeriod;
-			Indicator.SlowMaIndicator.Properties.Period = properties.SlowPeriod;
+			Indicator.FastMaIndicator.Period = properties.FastMaIndicator.Period;
+			Indicator.SlowMaIndicator.Period = properties.SlowMaIndicator.Period;
 
 			// 色
 			Series[0].Color = properties.MacdColor;

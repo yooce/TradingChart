@@ -6,47 +6,47 @@ using System.Windows.Forms.DataVisualization.Charting;
 namespace MagicalNuts.Plotters
 {
 	/// <summary>
-	/// ボリンジャーバンドプロッターのプロパティを表します。
+	/// ボリンジャーバンドインジケーターのプロッター用拡張を表します。
 	/// </summary>
-	public class BollingerBandPlotterProperties : Indicators.BollingerBandIndicatorProperties
+	public class BollingerBandIndicatorEx : Indicators.BollingerBandIndicator
 	{
 		/// <summary>
 		/// 移動平均線の色を取得または設定します。
 		/// </summary>
-		[Category("ボリンジャーバンド")]
+		[Category("プロット")]
+		[DisplayName("移動平均線の色")]
 		[Description("移動平均線の色を設定します。")]
-		[DefaultValue(typeof(Color), "144, 30, 38")]
 		public Color MaColor { get; set; } = Color.FromArgb(144, 30, 38);
 
 		/// <summary>
 		/// ボリンジャーバンドの色を取得または設定します。
 		/// </summary>
-		[Category("ボリンジャーバンド")]
+		[Category("プロット")]
+		[DisplayName("ボリンジャーバンドの色")]
 		[Description("ボリンジャーバンドの色を設定します。")]
-		[DefaultValue(typeof(Color), "0, 133, 131")]
 		public Color BandColor { get; set; } = Color.FromArgb(0, 133, 131);
 
 		/// <summary>
 		/// ボリンジャーバンドのアルファ値を取得または設定します。
 		/// </summary>
-		[Category("ボリンジャーバンド")]
+		[Category("プロット")]
+		[DisplayName("ボリンジャーバンドのアルファ値")]
 		[Description("ボリンジャーバンドのアルファ値を設定します。")]
-		[DefaultValue(10)]
 		public int BandAlpha { get; set; } = 10;
 
 		/// <summary>
 		/// 高速モードかどうかを取得または設定します。
 		/// </summary>
-		[Category("ボリンジャーバンド")]
+		[Category("プロット")]
+		[DisplayName("高速モード")]
 		[Description("高速モードかどうかを設定します。")]
-		[DefaultValue(true)]
 		public bool FastMode { get; set; } = true;
 	}
 
 	/// <summary>
 	/// ボリンジャーバンドのプロッターを表します。
 	/// </summary>
-	public class BollingerBandPlotter : IndicatorPlotter<Indicators.BollingerBandIndicator>
+	public class BollingerBandPlotter : IndicatorPlotter<BollingerBandIndicatorEx>
 	{
 		/// <summary>
 		/// Series
@@ -58,7 +58,6 @@ namespace MagicalNuts.Plotters
 		/// </summary>
 		public BollingerBandPlotter()
 		{
-			Indicator.Properties = new BollingerBandPlotterProperties();
 			Series = new Series[4];
 			for (int i = 0; i < Series.Length; i++)
 			{
@@ -88,7 +87,7 @@ namespace MagicalNuts.Plotters
 		/// <summary>
 		/// プロパティを取得します。
 		/// </summary>
-		public override object Properties => Indicator.Properties;
+		public override object Properties => Indicator;
 
 		/// <summary>
 		/// Seriesの配列を取得します。
@@ -141,10 +140,10 @@ namespace MagicalNuts.Plotters
 		/// </summary>
 		public override void ApplyProperties()
 		{
-			BollingerBandPlotterProperties properties = (BollingerBandPlotterProperties)Properties;
+			BollingerBandIndicatorEx properties = (BollingerBandIndicatorEx)Properties;
 
 			// 移動平均
-			Indicator.MovingAverageIndicator.Properties.Period = properties.Period;
+			Indicator.MovingAverageIndicator.Period = properties.MovingAverageIndicator.Period;
 
 			// 色
 			for (int i = 0; i < Series.Length; i++)

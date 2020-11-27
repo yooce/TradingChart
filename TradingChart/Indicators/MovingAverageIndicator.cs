@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 
 namespace MagicalNuts.Indicators
@@ -15,49 +17,31 @@ namespace MagicalNuts.Indicators
 	}
 
 	/// <summary>
-	/// 移動平均インジケーターのプロパティを表します。
+	/// 移動平均インジケーターを表します。
 	/// </summary>
-	public class MovingAverageIndicatorProperties
+	public class MovingAverageIndicator : IIndicator
 	{
 		/// <summary>
 		/// 期間を設定または取得します。
 		/// </summary>
 		[Category("移動平均")]
+		[DisplayName("期間")]
 		[Description("対象期間を設定します。")]
-		[DefaultValue(25)]
 		public int Period { get; set; } = 25;
 
 		/// <summary>
 		/// 計算方法を設定または取得します。
 		/// </summary>
 		[Category("移動平均")]
+		[DisplayName("計算方法")]
 		[Description("計算方法を設定します。")]
-		[DefaultValue(MaMethod.Sma)]
 		public MaMethod MaMethod { get; set; } = MaMethod.Sma;
-	}
-
-	/// <summary>
-	/// 移動平均インジケーターを表します。
-	/// </summary>
-	public class MovingAverageIndicator : IIndicator
-	{
-		/// <summary>
-		/// 移動平均インジケーターのプロパティを取得または設定します。
-		/// </summary>
-		public MovingAverageIndicatorProperties Properties { get; set; }
 
 		/// <summary>
 		/// 前回の移動平均
 		/// </summary>
+		[Browsable(false)]
 		private double? PreviousMa = null;
-
-		/// <summary>
-		/// MovingAverageIndicatorの新しいインスタンスを初期化します。
-		/// </summary>
-		public MovingAverageIndicator()
-		{
-			Properties = new MovingAverageIndicatorProperties();
-		}
 
 		/// <summary>
 		/// 再初期化します。
@@ -75,11 +59,10 @@ namespace MagicalNuts.Indicators
 		public double[] GetValues(IndicatorArgs args)
 		{
 			// 必要期間に満たない
-			if (args.Candles.Count < Properties.Period) return null;
+			if (args.Candles.Count < Period) return null;
 
 			// 移動平均
-			double ma = GetMovingAverage(args.Candles.GetRange(0
-				, Properties.Period).Select(candle => (double)candle.Close).ToArray(), Properties.MaMethod, PreviousMa);
+			double ma = GetMovingAverage(args.Candles.GetRange(0, Period).Select(candle => (double)candle.Close).ToArray(), MaMethod, PreviousMa);
 
 			// 次回のために覚えておく
 			PreviousMa = ma;
@@ -127,6 +110,59 @@ namespace MagicalNuts.Indicators
 					}
 			}
 			return 0.0;
+		}
+	}
+
+	/// <summary>
+	/// 移動平均インジケーターのPropertyGrid用変換器を表します。
+	/// </summary>
+	public class MovingAverageIndicatorConverter : ExpandableObjectConverter
+	{
+		/// <summary>
+		/// 変換器が型を変換できるかどうかを取得します。
+		/// </summary>
+		/// <param name="context">コンテキスト</param>
+		/// <param name="destinationType">型</param>
+		/// <returns>変換器が型を変換できるかどうか</returns>
+		public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+		{
+			return false;
+		}
+
+		/// <summary>
+		/// 変換されたオブジェクトを取得します。
+		/// </summary>
+		/// <param name="context">コンテキスト</param>
+		/// <param name="culture">カルチャ</param>
+		/// <param name="value">オブジェクト</param>
+		/// <param name="destinationType">型</param>
+		/// <returns>変換されたオブジェクト</returns>
+		public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// 変換器が型を復元できるかどうかを取得します。
+		/// </summary>
+		/// <param name="context">コンテキスト</param>
+		/// <param name="sourceType">型</param>
+		/// <returns>変換器が型を復元できるかどうか</returns>
+		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+		{
+			return false;
+		}
+
+		/// <summary>
+		/// 復元されたオブジェクトを取得します。
+		/// </summary>
+		/// <param name="context">コンテキスト</param>
+		/// <param name="culture">カルチャ</param>
+		/// <param name="value">オブジェクト</param>
+		/// <returns>復元されたオブジェクト</returns>
+		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+		{
+			return null;
 		}
 	}
 }
