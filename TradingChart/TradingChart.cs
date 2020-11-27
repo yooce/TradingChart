@@ -329,6 +329,52 @@ namespace MagicalNuts
 		}
 
 		/// <summary>
+		/// プロッターを除去します。
+		/// </summary>
+		/// <param name="plotter">プロッター</param>
+		public void RemovePlotter(Plotters.IPlotter plotter)
+		{
+			// 除去
+			Plotters.Remove(plotter);
+
+			// ロウソク足設定済みの場合
+			if (Candles != null)
+			{
+				// Series除去
+				foreach (Series series in plotter.SeriesArray)
+				{
+					Series.Remove(series);
+				}
+
+				// Y軸設定更新
+				UpdateYSettings();
+			}
+		}
+
+		/// <summary>
+		/// プロッターを再プロットします。
+		/// </summary>
+		/// <param name="plotter">プロッター</param>
+		public void Replot(Plotters.IPlotter plotter)
+		{
+			// ロウソク足設定済みの場合
+			if (Candles != null)
+			{
+				// クリア
+				foreach (Series series in plotter.SeriesArray)
+				{
+					series.Points.Clear();
+				}
+
+				// プロット
+				plotter.Plot(Candles);
+
+				// Y軸設定更新
+				UpdateYSettings();
+			}
+		}
+
+		/// <summary>
 		/// 従ChartAreaを追加します。
 		/// </summary>
 		/// <param name="subChartArea">従ChartArea</param>
