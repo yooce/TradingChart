@@ -18,7 +18,6 @@ TradingChartは株価データを持ちませんので、まずは何らかの�
 ```C#
 public class Candle
 {
-    public string Code { get; set; }
     public DateTime DateTime { get; set; }
     public decimal Open { get; set; }
     public decimal High { get; set; }
@@ -28,7 +27,7 @@ public class Candle
 }
 ```
 
-TradingChartコントロールを'Form'に配置し、`SetUp`を呼んだ後、`SetDailyCandles`で日足データを設定すれば、ロウソク足チャートが表示されます。
+TradingChartコントロールを`Form`に配置し、`SetUp`を呼んだ後、`SetDailyCandles`で日足データを設定すれば、ロウソク足チャートが表示されます。
 
 ```C#
 // DataTypes.Candle[] candles = ...
