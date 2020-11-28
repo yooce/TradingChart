@@ -8,11 +8,6 @@ namespace MagicalNuts.DataTypes
 	public class Candle
 	{
 		/// <summary>
-		/// 銘柄コード
-		/// </summary>
-		public string Code { get; set; }
-
-		/// <summary>
 		/// ロウソク足の開始日時
 		/// </summary>
 		public DateTime DateTime { get; set; }
