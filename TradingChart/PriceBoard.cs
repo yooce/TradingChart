@@ -44,38 +44,47 @@ namespace MagicalNuts
 		/// <summary>
 		/// ロウソク足を設定します。
 		/// </summary>
-		/// <param name="candle">ロウソク足</param>
+		/// <param name="cur">現在のロウソク足</param>
+		/// <param name="prev">前のロウソク足</param>
 		/// <param name="format">価格表示のフォーマット</param>
-		public void SetCandle(DataTypes.Candle candle, string format)
+		public void SetCandle(DataTypes.Candle cur, DataTypes.Candle prev, string format)
 		{
-			// ロウソク足が無い場合は非表示
-			if (candle == null)
+			// 現在のロウソク足が無い場合は非表示
+			if (cur == null)
 			{
 				Visible = false;
 				return;
 			}
 
 			// 値設定
-			labelOpenValue.Text = candle.Open.ToString(format);
-			labelHighValue.Text = candle.High.ToString(format);
-			labelLowValue.Text = candle.Low.ToString(format);
-			labelCloseValue.Text = candle.Close.ToString(format);
-			labelVolumeValue.Text = candle.Volume.ToString();
-			decimal diff = candle.Close - candle.Open;
-			decimal diff_p = (candle.Close / candle.Open - 1) * 100;
-			if (diff >= 0)
+			labelOpenValue.Text = cur.Open.ToString(format);
+			labelHighValue.Text = cur.High.ToString(format);
+			labelLowValue.Text = cur.Low.ToString(format);
+			labelCloseValue.Text = cur.Close.ToString(format);
+			labelVolumeValue.Text = cur.Volume.ToString();
+			if (prev != null)
 			{
-				labelUpDown.Text = "+" + diff.ToString(format);
-				labelUpDownP.Text = "(+" + diff_p.ToString("0.00") + "%)";
+				decimal diff = cur.Close - prev.Close;
+				decimal diff_p = (cur.Close / prev.Close - 1) * 100;
+				if (diff >= 0)
+				{
+					labelUpDown.Text = "+" + diff.ToString(format);
+					labelUpDownP.Text = "(+" + diff_p.ToString("0.00") + "%)";
+				}
+				else
+				{
+					labelUpDown.Text = diff.ToString(format);
+					labelUpDownP.Text = "(" + diff_p.ToString("0.00") + "%)";
+				}
 			}
 			else
 			{
-				labelUpDown.Text = diff.ToString(format);
-				labelUpDownP.Text = "(" + diff_p.ToString("0.00") + "%)";
+				labelUpDown.Text = "-";
+				labelUpDownP.Text = "(-%)";
 			}
 
 			// 色設定
-			if (diff >= 0)
+			if (cur.Close - cur.Open >= 0)
 			{
 				labelOpenValue.ForeColor = Palette.PriceUpColor;
 				labelHighValue.ForeColor = Palette.PriceUpColor;

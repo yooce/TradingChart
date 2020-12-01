@@ -70,7 +70,7 @@ namespace MagicalNuts
 			PriceBoard.Top = chart.Margin.Top;
 			PriceBoard.Left = chart.Margin.Left;
 			chart.Controls.Add(PriceBoard);
-			PriceBoard.SetCandle(null, null);
+			PriceBoard.SetCandle(null, null, null);
 
 			base.SetUp(chart);
 		}
@@ -104,7 +104,9 @@ namespace MagicalNuts
 			CursorLabelX.Top = (int)(AxisY2.ValueToPixelPosition(AxisY2.ScaleView.Position) + 1 + AxisY2.ScrollBar.Size);
 
 			// 価格表示板
-			PriceBoard.SetCandle(Candles[x], format);
+			DataTypes.Candle prev = null;
+			if (x > 0) prev = Candles[x - 1];
+			PriceBoard.SetCandle(Candles[x], prev, format);
 		}
 
 		/// <summary>

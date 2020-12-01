@@ -247,19 +247,19 @@ namespace MagicalNuts
 		/// CustomeLabelの名前を取得します。
 		/// </summary>
 		/// <param name="prev">前回の日時</param>
-		/// <param name="next">今回の日時</param>
+		/// <param name="cur">今回の日時</param>
 		/// <returns></returns>
-		private string GetCustomeLabelName(DateTime? prev, DateTime next)
+		private string GetCustomeLabelName(DateTime? prev, DateTime cur)
 		{
 			switch (_CandlePeriod)
 			{
 				case CandlePeriod.Dayly:
 				case CandlePeriod.Weekly:
-					if (prev == null || prev.Value.Year != next.Year) return next.ToString("yyyy");
-					return next.ToString("M月");
+					if (prev == null || prev.Value.Year != cur.Year) return cur.ToString("yyyy");
+					return cur.ToString("M月");
 				case CandlePeriod.Monthly:
 				case CandlePeriod.Yearly:
-					return next.ToString("yyyy");
+					return cur.ToString("yyyy");
 			}
 			return "";
 		}
