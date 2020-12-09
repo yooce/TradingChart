@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingChartSample", "Tradi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingChart", "TradingChart\TradingChart.csproj", "{DCEAEAB0-6135-4EBF-9BE6-19297D1BC2BC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataTypes", "DataTypes\DataTypes.csproj", "{2B568CF6-F31A-4E5C-81F2-FFE0772854C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingChart.Standard", "TradingChart.Standard\TradingChart.Standard.csproj", "{9FC7949D-2E05-4941-99E2-A2D7E0AF1C1B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{DCEAEAB0-6135-4EBF-9BE6-19297D1BC2BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCEAEAB0-6135-4EBF-9BE6-19297D1BC2BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCEAEAB0-6135-4EBF-9BE6-19297D1BC2BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2B568CF6-F31A-4E5C-81F2-FFE0772854C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B568CF6-F31A-4E5C-81F2-FFE0772854C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2B568CF6-F31A-4E5C-81F2-FFE0772854C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2B568CF6-F31A-4E5C-81F2-FFE0772854C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FC7949D-2E05-4941-99E2-A2D7E0AF1C1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FC7949D-2E05-4941-99E2-A2D7E0AF1C1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FC7949D-2E05-4941-99E2-A2D7E0AF1C1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FC7949D-2E05-4941-99E2-A2D7E0AF1C1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

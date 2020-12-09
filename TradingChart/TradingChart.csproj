@@ -45,14 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Indicators\AtrIndicator.cs" />
-    <Compile Include="Indicators\BollingerBandIndicator.cs" />
-    <Compile Include="Indicators\CandleIndicator.cs" />
-    <Compile Include="Indicators\IIndicator.cs" />
-    <Compile Include="Indicators\IndicatorArgs.cs" />
-    <Compile Include="Indicators\MacdIndicator.cs" />
-    <Compile Include="Indicators\MovingAverageIndicator.cs" />
-    <Compile Include="Indicators\VolumeIndicator.cs" />
     <Compile Include="Plotters\AtrPlotter.cs" />
     <Compile Include="Plotters\BollingerBandPlotter.cs" />
     <Compile Include="Plotters\CandlePlotter.cs" />
@@ -85,15 +77,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DataTypes\DataTypes.csproj">
-      <Project>{91f48d95-009d-47e5-a09e-c6032ff22f85}</Project>
-      <Name>DataTypes</Name>
+    <ProjectReference Include="..\TradingChart.Standard\TradingChart.Standard.csproj">
+      <Project>{7acc77cd-97d7-41b7-bcd4-9ca84403c07e}</Project>
+      <Name>TradingChart.Standard</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="MathNet.Numerics">
-      <Version>4.12.0</Version>
-    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
