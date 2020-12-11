@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MagicalNuts.Plotters
@@ -38,7 +39,6 @@ namespace MagicalNuts.Plotters
 			Series = new Series();
 			Series.ChartType = SeriesChartType.Line;
 			Series.YAxisType = AxisType.Secondary;
-			ApplyProperties();
 		}
 
 		/// <summary>
@@ -89,12 +89,13 @@ namespace MagicalNuts.Plotters
 		}
 
 		/// <summary>
-		/// プロパティを適用します。
+		/// 非同期で準備します。
 		/// </summary>
-		public override void ApplyProperties()
+		/// <returns>非同期タスク非同期タスク</returns>
+		public override async Task SetUpAsync()
 		{
+			await base.SetUpAsync();
 			Series.Color = ((MovingAverageIndicatorEx)Indicator).Color;
-			Indicator.Reset();
 		}
 	}
 }

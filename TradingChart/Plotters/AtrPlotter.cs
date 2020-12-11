@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MagicalNuts.Plotters
@@ -50,7 +51,6 @@ namespace MagicalNuts.Plotters
 			Series = new Series();
 			Series.ChartType = SeriesChartType.Line;
 			Series.YAxisType = AxisType.Secondary;
-			ApplyProperties();
 		}
 
 		/// <summary>
@@ -99,18 +99,20 @@ namespace MagicalNuts.Plotters
 			SubChartArea subChartArea = new SubChartArea();
 			Series.ChartArea = subChartArea.Name;
 			ChartArea = subChartArea;
-			ApplyProperties();
+			ChartArea.AxisY2.LabelStyle.Format = CandleUtility.GetPriceFormat(((AtrIndicatorEx)Properties).Digits);
 			return new SubChartArea[] { subChartArea };
 		}
 
 		/// <summary>
-		/// プロパティを適用します。
+		/// 非同期で準備します。
 		/// </summary>
-		public override void ApplyProperties()
+		/// <returns>非同期タスク</returns>
+		public override async Task SetUpAsync()
 		{
+			await base.SetUpAsync();
+
 			Series.Color = ((AtrIndicatorEx)Properties).Color;
 			if (ChartArea != null) ChartArea.AxisY2.LabelStyle.Format = CandleUtility.GetPriceFormat(((AtrIndicatorEx)Properties).Digits);
-			Indicator.Reset();
 		}
 	}
 }

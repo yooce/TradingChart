@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MagicalNuts.Plotters
@@ -76,7 +77,6 @@ namespace MagicalNuts.Plotters
 						break;
 				}
 			}
-			ApplyProperties();
 		}
 
 		/// <summary>
@@ -136,9 +136,10 @@ namespace MagicalNuts.Plotters
 		}
 
 		/// <summary>
-		/// プロパティを適用します。
+		/// 非同期で準備します。
 		/// </summary>
-		public override void ApplyProperties()
+		/// <returns>非同期タスク</returns>
+		public override async Task SetUpAsync()
 		{
 			BollingerBandIndicatorEx properties = (BollingerBandIndicatorEx)Properties;
 

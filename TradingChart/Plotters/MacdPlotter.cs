@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MagicalNuts.Plotters
@@ -105,7 +106,6 @@ namespace MagicalNuts.Plotters
 						break;
 				}
 			}
-			ApplyProperties();
 		}
 
 		/// <summary>
@@ -191,16 +191,19 @@ namespace MagicalNuts.Plotters
 				series.ChartArea = subChartArea.Name;
 			}
 			ChartArea = subChartArea;
-			ApplyProperties();
+			ChartArea.AxisY2.LabelStyle.Format = CandleUtility.GetPriceFormat(((MacdIndicatorEx)Properties).Digits);
 			return new SubChartArea[] { subChartArea };
 		}
 
 		/// <summary>
-		/// プロパティを適用します。
+		/// 非同期で準備します。
 		/// </summary>
-		public override void ApplyProperties()
+		/// <returns>非同期タスク</returns>
+		public override async Task SetUpAsync()
 		{
 			MacdIndicatorEx properties = (MacdIndicatorEx)Properties;
+
+			await base.SetUpAsync();
 
 			// 移動平均
 			Indicator.FastMaIndicator.Period = properties.FastMaIndicator.Period;
@@ -213,9 +216,6 @@ namespace MagicalNuts.Plotters
 
 			// 桁数
 			if (ChartArea != null) ChartArea.AxisY2.LabelStyle.Format = CandleUtility.GetPriceFormat(properties.Digits);
-
-			// 再初期化
-			Indicator.Reset();
 		}
 	}
 }

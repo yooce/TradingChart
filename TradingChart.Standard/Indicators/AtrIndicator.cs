@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MagicalNuts.Indicators
 {
@@ -25,9 +26,10 @@ namespace MagicalNuts.Indicators
 		private double? PreviousAtr = null;
 
 		/// <summary>
-		/// 再初期化します。
+		/// 非同期で準備します。
 		/// </summary>
-		public void Reset()
+		/// <returns>非同期タスク</returns>
+		public async Task SetUpAsync()
 		{
 			PreviousAtr = null;
 		}

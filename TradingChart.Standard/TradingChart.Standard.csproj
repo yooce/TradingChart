@@ -5,6 +5,14 @@
     <RootNamespace>MagicalNuts</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1998</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;1998</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="MathNet.Numerics" Version="4.12.0" />
   </ItemGroup>

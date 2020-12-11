@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MagicalNuts.Indicators
 {
@@ -44,9 +45,10 @@ namespace MagicalNuts.Indicators
 		private double? PreviousMa = null;
 
 		/// <summary>
-		/// 再初期化します。
+		/// 非同期で準備します。
 		/// </summary>
-		public void Reset()
+		/// <returns>非同期タスク</returns>
+		public async Task SetUpAsync()
 		{
 			PreviousMa = null;
 		}

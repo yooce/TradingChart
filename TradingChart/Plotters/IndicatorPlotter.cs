@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MagicalNuts.Plotters
@@ -71,8 +72,12 @@ namespace MagicalNuts.Plotters
 		}
 
 		/// <summary>
-		/// プロパティを適用します。
+		/// 非同期で準備します。
 		/// </summary>
-		public virtual void ApplyProperties() { }
+		/// <returns>非同期タスク</returns>
+		public virtual async Task SetUpAsync()
+		{
+			await Indicator.SetUpAsync();
+		}
 	}
 }

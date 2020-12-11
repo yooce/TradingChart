@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MagicalNuts.Plotters
@@ -37,8 +38,9 @@ namespace MagicalNuts.Plotters
 		void Plot(List<DataTypes.Candle> candles);
 
 		/// <summary>
-		/// プロパティを適用します。
+		/// 非同期で準備します。
 		/// </summary>
-		void ApplyProperties();
+		/// <returns>非同期タスク</returns>
+		Task SetUpAsync();
 	}
 }

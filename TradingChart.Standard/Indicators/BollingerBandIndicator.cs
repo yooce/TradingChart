@@ -1,6 +1,7 @@
 ﻿using MathNet.Numerics.Statistics;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MagicalNuts.Indicators
 {
@@ -33,6 +34,12 @@ namespace MagicalNuts.Indicators
 		{
 			MovingAverageIndicator = new MovingAverageIndicator();
 		}
+
+		/// <summary>
+		/// 非同期で準備します。
+		/// </summary>
+		/// <returns>非同期タスク</returns>
+		public async Task SetUpAsync() { }
 
 		/// <summary>
 		/// 値を取得します。
