@@ -586,7 +586,7 @@ namespace MagicalNuts
 			IsScrolling = false;
 
 			// Y軸設定更新
-			UpdateYSettings();
+			if (Candles != null) UpdateYSettings();
 		}
 
 		/// <summary>
