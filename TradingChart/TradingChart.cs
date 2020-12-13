@@ -600,7 +600,7 @@ namespace MagicalNuts
 			MainChartArea.AxisX.ScaleView.Position += e.Delta / 120 * 60;
 
 			// Y軸設定更新
-			UpdateYSettings();
+			if (Candles != null) UpdateYSettings();
 		}
 
 		/// <summary>
