@@ -38,6 +38,11 @@ namespace MagicalNuts.DataTypes
 		public long Volume { get; set; }
 
 		/// <summary>
+		/// 売買代金
+		/// </summary>
+		public decimal TradingValue => Close * Volume;
+
+		/// <summary>
 		/// ソート用に２つのロウソク足を比較します。
 		/// </summary>
 		/// <param name="a">ロウソク足</param>
