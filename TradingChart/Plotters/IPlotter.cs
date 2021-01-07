@@ -7,18 +7,8 @@ namespace MagicalNuts.Plotters
 	/// <summary>
 	/// プロッターのインターフェースを表します。
 	/// </summary>
-	public interface IPlotter
+	public interface IPlotter : DataTypes.IPropertyUser
 	{
-		/// <summary>
-		/// プロッター名を取得します。
-		/// </summary>
-		string Name { get; }
-
-		/// <summary>
-		/// プロパティを取得します。
-		/// </summary>
-		object Properties { get; }
-
 		/// <summary>
 		/// ChartAreaを設定します。
 		/// </summary>
