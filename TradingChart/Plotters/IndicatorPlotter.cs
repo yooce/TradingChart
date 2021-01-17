@@ -8,7 +8,7 @@ namespace MagicalNuts.Plotters
 	/// インジケーターのプロッターを表します。
 	/// </summary>
 	/// <typeparam name="T">インジケーターの型を指定します。</typeparam>
-	public abstract class IndicatorPlotter<T> : IPlotter where T : Indicators.IIndicator, new()
+	public abstract class IndicatorPlotter<T> : IPlotter where T : Indicators.IndicatorBase, new()
 	{
 		/// <summary>
 		/// インジケーター

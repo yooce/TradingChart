@@ -5,22 +5,22 @@ namespace MagicalNuts.Indicators
 	/// <summary>
 	/// 出来高インジケーターを表します。
 	/// </summary>
-	public class VolumeIndicator : IIndicator
+	public class VolumeIndicator : IndicatorBase
 	{
 		/// <summary>
 		/// 非同期で準備します。
 		/// </summary>
 		/// <returns>非同期タスク</returns>
-		public async Task SetUpAsync() { }
+		public override async Task SetUpAsync() { }
 
 		/// <summary>
 		/// 値を取得します。
 		/// </summary>
 		/// <param name="args">インジケーター引数</param>
 		/// <returns>値</returns>
-		public double[] GetValues(IndicatorArgs args)
+		public override double[] GetValues()
 		{
-			return new double[] { args.Candles[0].Volume };
+			return new double[] { Volume(0) };
 		}
 	}
 }

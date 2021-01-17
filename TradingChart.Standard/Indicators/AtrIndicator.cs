@@ -9,7 +9,7 @@ namespace MagicalNuts.Indicators
 	/// <summary>
 	/// ATRインジケーターを表します。
 	/// </summary>
-	public class AtrIndicator : IIndicator
+	public class AtrIndicator : IndicatorBase
 	{
 		/// <summary>
 		/// 期間を設定または取得します。
@@ -29,7 +29,7 @@ namespace MagicalNuts.Indicators
 		/// 非同期で準備します。
 		/// </summary>
 		/// <returns>非同期タスク</returns>
-		public async Task SetUpAsync()
+		public override async Task SetUpAsync()
 		{
 			PreviousAtr = null;
 		}
@@ -39,25 +39,25 @@ namespace MagicalNuts.Indicators
 		/// </summary>
 		/// <param name="args">インジケーター引数</param>
 		/// <returns>値</returns>
-		public double[] GetValues(IndicatorArgs args)
+		public override double[] GetValues()
 		{
 			// 必要期間に満たない
-			if (args.Candles.Count < Period + 1) return null;
+			if (Candles.Count < Period + 1) return null;
 
 			// 真の値幅（TR）
-			List<decimal> trs = new List<decimal>();
+			List<double> trs = new List<double>();
 			for (int i = 0; i < Period; i++)
 			{
-				trs.Add(new decimal[]
+				trs.Add(new double[]
 				{
-					Math.Abs(args.Candles[i].High - args.Candles[i].Low),		// 当日高値 - 当日安値
-					Math.Abs(args.Candles[i].High - args.Candles[i + 1].Close),	// 当日高値 - 前日終値
-					Math.Abs(args.Candles[i].Low - args.Candles[i + 1].Close)	// 当日安値 - 前日終値
+					Math.Abs(High(i) - Low(i)),		// 当日高値 - 当日安値
+					Math.Abs(High(i) - Close(i + 1)),	// 当日高値 - 前日終値
+					Math.Abs(Low(i) - Close(i + 1))	// 当日安値 - 前日終値
 				}.Max());
 			}
 
 			// ATR
-			double atr = MovingAverageIndicator.GetMovingAverage(trs.Select(tr => (double)tr).ToArray(), MaMethod.Smma, PreviousAtr);
+			double atr = MovingAverageIndicator.GetMovingAverage(trs.ToArray(), MaMethod.Smma, PreviousAtr);
 
 			// 次回のために覚えておく
 			PreviousAtr = atr;
