@@ -80,11 +80,11 @@ namespace MagicalNuts
 			List<PluginInfo> pluginInfos = new List<PluginInfo>();
 			foreach (Type type in assembly.GetTypes())
 			{
-				// ロウソク足と出来高プロッターは除外
+				// 除外ケース
 				if (IsExclude(type)) continue;
 
 				// クラス、公開、抽象クラスでない、Tを継承している、が条件
-				if (type.IsClass && type.IsPublic && !type.IsAbstract && type.GetInterface(typeof(T).FullName) != null)
+				if (type.IsClass && type.IsPublic && !type.IsAbstract && (type.GetInterface(typeof(T).FullName) != null || type.IsSubclassOf(typeof(T))))
 				{
 					pluginInfos.Add(new PluginInfo(assembly, type.FullName));
 				}
