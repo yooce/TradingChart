@@ -66,9 +66,9 @@ namespace MagicalNuts.Plotters
 		/// </summary>
 		/// <param name="x">x座標</param>
 		/// <returns>インジケーター用のロウソク足のリスト</returns>
-		protected List<DataTypes.Candle> GetCandlesForIndicator(int x)
+		protected DataTypes.CandleCollection GetCandlesForIndicator(int x)
 		{
-			return ReversedCandles.GetRange(ReversedCandles.Count - x - 1, x + 1);
+			return new DataTypes.CandleCollection(ReversedCandles.GetRange(ReversedCandles.Count - x - 1, x + 1));
 		}
 
 		/// <summary>

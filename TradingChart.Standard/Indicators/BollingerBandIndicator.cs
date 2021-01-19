@@ -46,17 +46,16 @@ namespace MagicalNuts.Indicators
 		/// </summary>
 		/// <param name="args">インジケーター引数</param>
 		/// <returns>値</returns>
-		public override double[] GetValues()
+		public override double[] GetValues(DataTypes.CandleCollection candles)
 		{
 			// 必要期間に満たない
-			if (Candles.Count < MovingAverageIndicator.Period) return null;
+			if (candles.Count < MovingAverageIndicator.Period) return null;
 
 			// 移動平均
-			MovingAverageIndicator.Candles = Candles;
-			double ma = MovingAverageIndicator.GetValues()[0];
+			double ma = MovingAverageIndicator.GetValues(candles)[0];
 
 			// 標準偏差
-			double dev = Candles.GetRange(0, MovingAverageIndicator.Period).Select(candle => (double)candle.Close).PopulationStandardDeviation();
+			double dev = candles.GetRange(0, MovingAverageIndicator.Period).Select(candle => (double)candle.Close).PopulationStandardDeviation();
 
 			return new double[] { ma, ma + dev * Deviation, ma - dev * Deviation };
 		}

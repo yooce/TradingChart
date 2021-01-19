@@ -39,10 +39,10 @@ namespace MagicalNuts.Indicators
 		/// </summary>
 		/// <param name="args">インジケーター引数</param>
 		/// <returns>値</returns>
-		public override double[] GetValues()
+		public override double[] GetValues(DataTypes.CandleCollection candles)
 		{
 			// 必要期間に満たない
-			if (Candles.Count < Period + 1) return null;
+			if (candles.Count < Period + 1) return null;
 
 			// 真の値幅（TR）
 			List<double> trs = new List<double>();
@@ -50,9 +50,9 @@ namespace MagicalNuts.Indicators
 			{
 				trs.Add(new double[]
 				{
-					Math.Abs(High(i) - Low(i)),		// 当日高値 - 当日安値
-					Math.Abs(High(i) - Close(i + 1)),	// 当日高値 - 前日終値
-					Math.Abs(Low(i) - Close(i + 1))	// 当日安値 - 前日終値
+					Math.Abs(candles.High(i) - candles.Low(i)),		// 当日高値 - 当日安値
+					Math.Abs(candles.High(i) - candles.Close(i + 1)),	// 当日高値 - 前日終値
+					Math.Abs(candles.Low(i) - candles.Close(i + 1))	// 当日安値 - 前日終値
 				}.Max());
 			}
 

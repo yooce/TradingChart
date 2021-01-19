@@ -82,8 +82,7 @@ namespace MagicalNuts.Plotters
 			// プロット
 			for (int x = 0; x < candles.Count; x++)
 			{
-				Indicator.Candles = GetCandlesForIndicator(x);
-				double[] data = Indicator.GetValues();
+				double[] data = Indicator.GetValues(GetCandlesForIndicator(x));
 				if (data == null) continue;
 
 				Series.Points.Add(new DataPoint(x, data));

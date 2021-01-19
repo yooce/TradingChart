@@ -18,9 +18,9 @@ namespace MagicalNuts.Indicators
 		/// </summary>
 		/// <param name="args">インジケーター引数</param>
 		/// <returns>値</returns>
-		public override double[] GetValues()
+		public override double[] GetValues(DataTypes.CandleCollection candles)
 		{
-			return new double[] { Volume(0) };
+			return new double[] { candles.Volume(0) };
 		}
 	}
 }

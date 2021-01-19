@@ -83,19 +83,17 @@ namespace MagicalNuts.Indicators
 		/// </summary>
 		/// <param name="args">インジケーター引数</param>
 		/// <returns>値</returns>
-		public override double[] GetValues()
+		public override double[] GetValues(DataTypes.CandleCollection candles)
 		{
 			// 必要期間に満たない
-			if (Candles.Count < FastMaIndicator.Period || Candles.Count < SlowMaIndicator.Period) return null;
+			if (candles.Count < FastMaIndicator.Period || candles.Count < SlowMaIndicator.Period) return null;
 
 			// キュー作成
 			if (MacdQueue == null) MacdQueue = new Queue<double>();
 
 			// 移動平均
-			FastMaIndicator.Candles = Candles;
-			SlowMaIndicator.Candles = Candles;
-			double fast_ma = FastMaIndicator.GetValues()[0];
-			double slow_ma = SlowMaIndicator.GetValues()[0];
+			double fast_ma = FastMaIndicator.GetValues(candles)[0];
+			double slow_ma = SlowMaIndicator.GetValues(candles)[0];
 
 			// MACD
 			double macd = fast_ma - slow_ma;
