@@ -50,9 +50,9 @@ namespace MagicalNuts.Indicators
 			{
 				trs.Add(new decimal[]
 				{
-					Math.Abs(candles.High(i) - candles.Low(i)),		// 当日高値 - 当日安値
-					Math.Abs(candles.High(i) - candles.Close(i + 1)),	// 当日高値 - 前日終値
-					Math.Abs(candles.Low(i) - candles.Close(i + 1))	// 当日安値 - 前日終値
+					Math.Abs(candles[i].High - candles[i].Low),			// 当日高値 - 当日安値
+					Math.Abs(candles[i].High - candles[i + 1].Close),	// 当日高値 - 前日終値
+					Math.Abs(candles[i].Low - candles[i + 1].Close)		// 当日安値 - 前日終値
 				}.Max());
 			}
 

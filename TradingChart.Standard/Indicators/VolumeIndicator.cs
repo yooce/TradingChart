@@ -20,7 +20,7 @@ namespace MagicalNuts.Indicators
 		/// <returns>値</returns>
 		public decimal[] GetValues(DataTypes.CandleCollection candles)
 		{
-			return new decimal[] { candles.Volume(0) };
+			return new decimal[] { candles[0].Volume };
 		}
 	}
 }
