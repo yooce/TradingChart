@@ -4,11 +4,6 @@ using System.Text;
 
 namespace MagicalNuts.DataTypes
 {
-	public enum PriceType
-	{
-		Open = 0, High, Low, Close
-	}
-
 	public class CandleCollection : List<Candle>
 	{
 		public CandleCollection(List<Candle> candles)

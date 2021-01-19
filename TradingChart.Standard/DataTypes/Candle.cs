@@ -3,6 +3,14 @@
 namespace MagicalNuts.DataTypes
 {
 	/// <summary>
+	/// 価格の種類を表します。
+	/// </summary>
+	public enum PriceType
+	{
+		Open = 0, High, Low, Close
+	}
+
+	/// <summary>
 	/// ロウソク足を表します。
 	/// </summary>
 	public class Candle
@@ -53,6 +61,32 @@ namespace MagicalNuts.DataTypes
 			if (a.DateTime < b.DateTime) return -1;
 			if (a.DateTime == b.DateTime) return 0;
 			return 1;
+		}
+
+		/// <summary>
+		/// 価格を取得します。
+		/// </summary>
+		/// <param name="pt">価格の種類</param>
+		/// <returns>価格</returns>
+		public decimal Price(PriceType pt)
+		{
+			decimal price = 0;
+			switch (pt)
+			{
+				case PriceType.Open:
+					price = Open;
+					break;
+				case PriceType.High:
+					price = High;
+					break;
+				case PriceType.Low:
+					price = Low;
+					break;
+				case PriceType.Close:
+					price = Close;
+					break;
+			}
+			return price;
 		}
 	}
 }
