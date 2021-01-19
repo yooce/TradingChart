@@ -8,7 +8,7 @@ namespace MagicalNuts.Indicators
 	/// <summary>
 	/// ボリンジャーバンドインジケーターを表します。
 	/// </summary>
-	public class BollingerBandIndicator : IndicatorBase
+	public class BollingerBandIndicator : IIndicator
 	{
 		/// <summary>
 		/// 標準偏差の倍率を設定または取得します。
@@ -39,14 +39,14 @@ namespace MagicalNuts.Indicators
 		/// 非同期で準備します。
 		/// </summary>
 		/// <returns>非同期タスク</returns>
-		public override async Task SetUpAsync() { }
+		public async Task SetUpAsync() { }
 
 		/// <summary>
 		/// 値を取得します。
 		/// </summary>
-		/// <param name="args">インジケーター引数</param>
+		/// <param name="candles">ロウソク足のコレクション</param>
 		/// <returns>値</returns>
-		public override double[] GetValues(DataTypes.CandleCollection candles)
+		public double[] GetValues(DataTypes.CandleCollection candles)
 		{
 			// 必要期間に満たない
 			if (candles.Count < MovingAverageIndicator.Period) return null;

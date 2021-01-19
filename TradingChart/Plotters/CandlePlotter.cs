@@ -61,7 +61,7 @@ namespace MagicalNuts.Plotters
 			for (int x = 0; x < candles.Count; x++)
 			{
 				// 値
-				DataPoint dp = new DataPoint(x, Indicator.GetValues(GetCandlesForIndicator(x)));
+				DataPoint dp = new DataPoint(x, Indicator.GetValues(GetCandleCollection(x)));
 
 				// 着色
 				if (candles[x].Close >= candles[x].Open) dp.Color = Palette.PriceUpColor;

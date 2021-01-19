@@ -8,7 +8,7 @@ namespace MagicalNuts.Plotters
 	/// インジケーターのプロッターを表します。
 	/// </summary>
 	/// <typeparam name="T">インジケーターの型を指定します。</typeparam>
-	public abstract class IndicatorPlotter<T> : IPlotter where T : Indicators.IndicatorBase, new()
+	public abstract class IndicatorPlotter<T> : IPlotter where T : Indicators.IIndicator, new()
 	{
 		/// <summary>
 		/// インジケーター
@@ -62,11 +62,11 @@ namespace MagicalNuts.Plotters
 		}
 
 		/// <summary>
-		/// インジケーター用のロウソク足のリストを取得します。
+		/// ロウソク足のコレクションを取得します。
 		/// </summary>
 		/// <param name="x">x座標</param>
-		/// <returns>インジケーター用のロウソク足のリスト</returns>
-		protected DataTypes.CandleCollection GetCandlesForIndicator(int x)
+		/// <returns>ロウソク足のコレクション</returns>
+		protected DataTypes.CandleCollection GetCandleCollection(int x)
 		{
 			return new DataTypes.CandleCollection(ReversedCandles.GetRange(ReversedCandles.Count - x - 1, x + 1));
 		}
