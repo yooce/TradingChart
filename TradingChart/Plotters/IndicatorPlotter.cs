@@ -16,9 +16,9 @@ namespace MagicalNuts.Plotters
 		public T Indicator { get; private set; }
 
 		/// <summary>
-		/// 逆順ロウソク足のリスト
+		/// ロウソク足のコレクション
 		/// </summary>
-		private List<DataTypes.Candle> ReversedCandles = null;
+		private DataTypes.CandleCollection Candles = null;
 
 		/// <summary>
 		/// IndicatorPlotterの新しいインスタンスを初期化します。
@@ -56,9 +56,10 @@ namespace MagicalNuts.Plotters
 		/// <param name="candles">ロウソク足のリスト</param>
 		public virtual void Plot(List<DataTypes.Candle> candles)
 		{
-			ReversedCandles = new List<DataTypes.Candle>();
-			ReversedCandles.AddRange(candles);
-			ReversedCandles.Reverse();
+			List<DataTypes.Candle> reversed = new List<DataTypes.Candle>();
+			reversed.AddRange(candles);
+			reversed.Reverse();
+			Candles = new DataTypes.CandleCollection(reversed);
 		}
 
 		/// <summary>
@@ -68,7 +69,7 @@ namespace MagicalNuts.Plotters
 		/// <returns>ロウソク足のコレクション</returns>
 		protected DataTypes.CandleCollection GetCandleCollection(int x)
 		{
-			return new DataTypes.CandleCollection(ReversedCandles.GetRange(ReversedCandles.Count - x - 1, x + 1));
+			return new DataTypes.CandleCollection(Candles.Shift(Candles.Count - x - 1));
 		}
 
 		/// <summary>
