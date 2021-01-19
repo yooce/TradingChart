@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -79,6 +80,16 @@ namespace MagicalNuts.Plotters
 		public virtual async Task SetUpAsync()
 		{
 			await Indicator.SetUpAsync();
+		}
+
+		/// <summary>
+		/// decimalの配列をdoubleの配列に変換します。
+		/// </summary>
+		/// <param name="decimals">decimalの配列</param>
+		/// <returns>doubleの配列</returns>
+		protected static double[] ConvertDecimalToDoubleArray(decimal[] decimals)
+		{
+			return decimals.Select(d => (double)d).ToArray();
 		}
 	}
 }

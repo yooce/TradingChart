@@ -18,9 +18,9 @@ namespace MagicalNuts.Indicators
 		/// </summary>
 		/// <param name="candles">ロウソク足のコレクション</param>
 		/// <returns>値</returns>
-		public double[] GetValues(DataTypes.CandleCollection candles)
+		public decimal[] GetValues(DataTypes.CandleCollection candles)
 		{
-			return new double[] { candles.Volume(0) };
+			return new decimal[] { candles.Volume(0) };
 		}
 	}
 }

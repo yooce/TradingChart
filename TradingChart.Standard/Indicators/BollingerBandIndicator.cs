@@ -16,7 +16,7 @@ namespace MagicalNuts.Indicators
 		[Category("ボリンジャーバンド")]
 		[DisplayName("標準偏差の倍率")]
 		[Description("標準偏差の倍率を設定します。")]
-		public double Deviation { get; set; } = 2.0;
+		public decimal Deviation { get; set; } = 2;
 
 		/// <summary>
 		/// 移動平均インジケーターを設定または取得します。
@@ -46,18 +46,19 @@ namespace MagicalNuts.Indicators
 		/// </summary>
 		/// <param name="candles">ロウソク足のコレクション</param>
 		/// <returns>値</returns>
-		public double[] GetValues(DataTypes.CandleCollection candles)
+		public decimal[] GetValues(DataTypes.CandleCollection candles)
 		{
 			// 必要期間に満たない
 			if (candles.Count < MovingAverageIndicator.Period) return null;
 
 			// 移動平均
-			double ma = MovingAverageIndicator.GetValues(candles)[0];
+			decimal ma = MovingAverageIndicator.GetValues(candles)[0];
 
 			// 標準偏差
-			double dev = candles.GetRange(0, MovingAverageIndicator.Period).Select(candle => (double)candle.Close).PopulationStandardDeviation();
+			decimal dev
+				= (decimal)candles.GetRange(0, MovingAverageIndicator.Period).Select(candle => (double)candle.Close).PopulationStandardDeviation();
 
-			return new double[] { ma, ma + dev * Deviation, ma - dev * Deviation };
+			return new decimal[] { ma, ma + dev * Deviation, ma - dev * Deviation };
 		}
 	}
 }

@@ -18,6 +18,6 @@ namespace MagicalNuts.Indicators
 		/// </summary>
 		/// <param name="candles">ロウソク足のコレクション</param>
 		/// <returns>値</returns>
-		double[] GetValues(DataTypes.CandleCollection candles);
+		decimal[] GetValues(DataTypes.CandleCollection candles);
 	}
 }

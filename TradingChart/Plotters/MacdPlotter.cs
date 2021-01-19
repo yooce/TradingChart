@@ -140,17 +140,17 @@ namespace MagicalNuts.Plotters
 			// プロット
 			for (int x = 0; x < candles.Count; x++)
 			{
-				double[] data = Indicator.GetValues(GetCandleCollection(x));
+				decimal[] data = Indicator.GetValues(GetCandleCollection(x));
 				if (data == null) continue;
 
 				// MACD
-				Series[0].Points.Add(new DataPoint(x, data[0]));
+				Series[0].Points.Add(new DataPoint(x, (double)data[0]));
 
 				// MACDシグナル
-				Series[1].Points.Add(new DataPoint(x, data[1]));
+				Series[1].Points.Add(new DataPoint(x, (double)data[1]));
 
 				// MACDオシレーター
-				Series[2].Points.Add(new DataPoint(x, data[0] - data[1]));
+				Series[2].Points.Add(new DataPoint(x, (double)data[0] - (double)data[1]));
 			}
 
 			// オシレーター色

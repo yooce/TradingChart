@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -82,10 +83,10 @@ namespace MagicalNuts.Plotters
 			// プロット
 			for (int x = 0; x < candles.Count; x++)
 			{
-				double[] data = Indicator.GetValues(GetCandleCollection(x));
+				decimal[] data = Indicator.GetValues(GetCandleCollection(x));
 				if (data == null) continue;
 
-				Series.Points.Add(new DataPoint(x, data));
+				Series.Points.Add(new DataPoint(x, ConvertDecimalToDoubleArray(data)));
 			}
 		}
 

@@ -23,7 +23,7 @@ namespace MagicalNuts.Indicators
 		/// 前回のATR
 		/// </summary>
 		[Browsable(false)]
-		private double? PreviousAtr = null;
+		private decimal? PreviousAtr = null;
 
 		/// <summary>
 		/// 非同期で準備します。
@@ -39,16 +39,16 @@ namespace MagicalNuts.Indicators
 		/// </summary>
 		/// <param name="candles">ロウソク足のコレクション</param>
 		/// <returns>値</returns>
-		public double[] GetValues(DataTypes.CandleCollection candles)
+		public decimal[] GetValues(DataTypes.CandleCollection candles)
 		{
 			// 必要期間に満たない
 			if (candles.Count < Period + 1) return null;
 
 			// 真の値幅（TR）
-			List<double> trs = new List<double>();
+			List<decimal> trs = new List<decimal>();
 			for (int i = 0; i < Period; i++)
 			{
-				trs.Add(new double[]
+				trs.Add(new decimal[]
 				{
 					Math.Abs(candles.High(i) - candles.Low(i)),		// 当日高値 - 当日安値
 					Math.Abs(candles.High(i) - candles.Close(i + 1)),	// 当日高値 - 前日終値
@@ -57,12 +57,12 @@ namespace MagicalNuts.Indicators
 			}
 
 			// ATR
-			double atr = MovingAverageIndicator.GetMovingAverage(trs.ToArray(), MaMethod.Smma, PreviousAtr);
+			decimal atr = MovingAverageIndicator.GetMovingAverage(trs.ToArray(), MaMethod.Smma, PreviousAtr);
 
 			// 次回のために覚えておく
 			PreviousAtr = atr;
 
-			return new double[] { atr };
+			return new decimal[] { atr };
 		}
 	}
 }

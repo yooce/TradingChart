@@ -17,24 +17,24 @@ namespace MagicalNuts.DataTypes
 			return this[i].DateTime;
 		}
 
-		public double Open(int i)
+		public decimal Open(int i)
 		{
-			return (double)this[i].Open;
+			return this[i].Open;
 		}
 
-		public double High(int i)
+		public decimal High(int i)
 		{
-			return (double)this[i].High;
+			return this[i].High;
 		}
 
-		public double Low(int i)
+		public decimal Low(int i)
 		{
-			return (double)this[i].Low;
+			return this[i].Low;
 		}
 
-		public double Close(int i)
+		public decimal Close(int i)
 		{
-			return (double)this[i].Close;
+			return this[i].Close;
 		}
 
 		public long Volume(int i)
@@ -42,14 +42,14 @@ namespace MagicalNuts.DataTypes
 			return this[i].Volume;
 		}
 
-		public double TradingValue(int i)
+		public decimal TradingValue(int i)
 		{
-			return (double)this[i].TradingValue;
+			return this[i].TradingValue;
 		}
 
-		public double Price(PriceType pt, int i)
+		public decimal Price(PriceType pt, int i)
 		{
-			double price = 0.0;
+			decimal price = 0;
 			switch (pt)
 			{
 				case PriceType.Open:

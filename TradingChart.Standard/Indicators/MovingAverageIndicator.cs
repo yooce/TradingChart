@@ -42,7 +42,7 @@ namespace MagicalNuts.Indicators
 		/// 前回の移動平均
 		/// </summary>
 		[Browsable(false)]
-		private double? PreviousMa = null;
+		private decimal? PreviousMa = null;
 
 		/// <summary>
 		/// 非同期で準備します。
@@ -58,18 +58,18 @@ namespace MagicalNuts.Indicators
 		/// </summary>
 		/// <param name="candles">ロウソク足のコレクション</param>
 		/// <returns>値</returns>
-		public double[] GetValues(DataTypes.CandleCollection candles)
+		public decimal[] GetValues(DataTypes.CandleCollection candles)
 		{
 			// 必要期間に満たない
 			if (candles.Count < Period) return null;
 
 			// 移動平均
-			double ma = GetMovingAverage(candles.GetRange(0, Period).Select(candle => (double)candle.Close).ToArray(), MaMethod, PreviousMa);
+			decimal ma = GetMovingAverage(candles.GetRange(0, Period).Select(candle => candle.Close).ToArray(), MaMethod, PreviousMa);
 
 			// 次回のために覚えておく
 			PreviousMa = ma;
 
-			return new double[] { ma };
+			return new decimal[] { ma };
 		}
 
 		/// <summary>
@@ -79,7 +79,7 @@ namespace MagicalNuts.Indicators
 		/// <param name="method">移動平均の計算方法</param>
 		/// <param name="prev_ma">前回の移動平均</param>
 		/// <returns>移動平均</returns>
-		public static double GetMovingAverage(double[] data, MaMethod method, double? prev_ma)
+		public static decimal GetMovingAverage(decimal[] data, MaMethod method, decimal? prev_ma)
 		{
 			switch (method)
 			{
@@ -91,18 +91,18 @@ namespace MagicalNuts.Indicators
 				case MaMethod.Smma:
 					{
 						// 係数
-						double a = 0.0;
-						if (method == MaMethod.Ema) a = 2.0 / (data.Length + 1);
-						else a = 1.0 / data.Length;
+						decimal a = 0;
+						if (method == MaMethod.Ema) a = 2 / (data.Length + 1);
+						else a = 1 / data.Length;
 
 						// 初回の移動平均
 						if (prev_ma == null) prev_ma = data.Last();
 
-						return a * data[0] + (1.0 - a) * prev_ma.Value;
+						return a * data[0] + (1 - a) * prev_ma.Value;
 					}
 				case MaMethod.Lwma:
 					{
-						double sum1 = 0.0, sum2 = 0.0;
+						decimal sum1 = 0, sum2 = 0;
 						for (int i = 0; i < data.Length; i++)
 						{
 							sum1 += (data.Length - i) * data[i];
@@ -111,7 +111,7 @@ namespace MagicalNuts.Indicators
 						return sum1 / sum2;
 					}
 			}
-			return 0.0;
+			return 0;
 		}
 	}
 

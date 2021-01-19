@@ -111,13 +111,13 @@ namespace MagicalNuts.Plotters
 			// プロット
 			for (int x = 0; x < candles.Count; x++)
 			{
-				double[] data = Indicator.GetValues(GetCandleCollection(x));
+				decimal[] data = Indicator.GetValues(GetCandleCollection(x));
 				if (data == null) continue;
 
-				Series[0].Points.Add(new DataPoint(x, data[0]));
-				Series[1].Points.Add(new DataPoint(x, new double[] { data[1], data[2] }));
-				Series[2].Points.Add(new DataPoint(x, data[1]));
-				Series[3].Points.Add(new DataPoint(x, data[2]));
+				Series[0].Points.Add(new DataPoint(x, (double)data[0]));
+				Series[1].Points.Add(new DataPoint(x, new double[] { (double)data[1], (double)data[2] }));
+				Series[2].Points.Add(new DataPoint(x, (double)data[1]));
+				Series[3].Points.Add(new DataPoint(x, (double)data[2]));
 			}
 		}
 

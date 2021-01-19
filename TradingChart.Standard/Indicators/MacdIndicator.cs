@@ -47,13 +47,13 @@ namespace MagicalNuts.Indicators
 		/// MACDのキュー
 		/// </summary>
 		[Browsable(false)]
-		private Queue<double> MacdQueue = null;
+		private Queue<decimal> MacdQueue = null;
 
 		/// <summary>
 		/// 前回のMACDシグナル
 		/// </summary>
 		[Browsable(false)]
-		private double? PreviousSignal = null;
+		private decimal? PreviousSignal = null;
 
 		/// <summary>
 		/// MacdIndicatorの新しいインスタンスを初期化します。
@@ -83,20 +83,20 @@ namespace MagicalNuts.Indicators
 		/// </summary>
 		/// <param name="candles">ロウソク足のコレクション</param>
 		/// <returns>値</returns>
-		public double[] GetValues(DataTypes.CandleCollection candles)
+		public decimal[] GetValues(DataTypes.CandleCollection candles)
 		{
 			// 必要期間に満たない
 			if (candles.Count < FastMaIndicator.Period || candles.Count < SlowMaIndicator.Period) return null;
 
 			// キュー作成
-			if (MacdQueue == null) MacdQueue = new Queue<double>();
+			if (MacdQueue == null) MacdQueue = new Queue<decimal>();
 
 			// 移動平均
-			double fast_ma = FastMaIndicator.GetValues(candles)[0];
-			double slow_ma = SlowMaIndicator.GetValues(candles)[0];
+			decimal fast_ma = FastMaIndicator.GetValues(candles)[0];
+			decimal slow_ma = SlowMaIndicator.GetValues(candles)[0];
 
 			// MACD
-			double macd = fast_ma - slow_ma;
+			decimal macd = fast_ma - slow_ma;
 
 			// キューに格納
 			MacdQueue.Enqueue(macd);
@@ -106,12 +106,12 @@ namespace MagicalNuts.Indicators
 			if (MacdQueue.Count < SignalPeriod) return null;
 
 			// シグナル
-			double signal = MovingAverageIndicator.GetMovingAverage(MacdQueue.ToArray(), SignalMaMethod, PreviousSignal);
+			decimal signal = MovingAverageIndicator.GetMovingAverage(MacdQueue.ToArray(), SignalMaMethod, PreviousSignal);
 
 			// 次回のために覚えておく
 			PreviousSignal = signal;
 
-			return new double[] { macd, signal };
+			return new decimal[] { macd, signal };
 		}
 	}
 }
