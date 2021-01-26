@@ -92,8 +92,8 @@ namespace MagicalNuts.Indicators
 					{
 						// 係数
 						decimal a = 0;
-						if (method == MaMethod.Ema) a = 2 / (data.Length + 1);
-						else a = 1 / data.Length;
+						if (method == MaMethod.Ema) a = 2.0m / (decimal)(data.Length + 1);
+						else a = 1.0m / (decimal)data.Length;
 
 						// 初回の移動平均
 						if (prev_ma == null) prev_ma = data.Last();
