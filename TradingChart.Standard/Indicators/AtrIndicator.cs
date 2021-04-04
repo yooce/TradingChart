@@ -39,7 +39,7 @@ namespace MagicalNuts.Indicators
 		/// </summary>
 		/// <param name="candles">ロウソク足のコレクション</param>
 		/// <returns>値</returns>
-		public decimal[] GetValues(DataTypes.CandleCollection candles)
+		public virtual decimal[] GetValues(DataTypes.CandleCollection candles)
 		{
 			// 必要期間に満たない
 			if (candles.Count < Period + 1) return null;
